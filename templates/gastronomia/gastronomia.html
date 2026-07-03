@@ -1,0 +1,356 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gastronomia Típica — Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --terra:   #C25B2A;
+      --ocre:    #E8A04A;
+      --noite:   #0D1117;
+      --escuro:  #1A2130;
+      --branco:  #F7F3EE;
+      --cinza:   #8C9BB0;
+      --verde:   #2D6A4F;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--noite); color: var(--branco); overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 5%; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,17,23,0.95); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    a{
+      text-decoration: none;
+    }
+    .nav-logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+    .nav-logo .marca { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; color: var(--branco); }
+    .nav-logo .sub { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--ocre); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(247,243,238,0.75); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ocre); }
+    .nav-cta { background: var(--terra); color: var(--branco); padding: 0.6rem 1.4rem; border-radius: 2px; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--ocre); color: var(--noite); }
+
+    /* HERO */
+    .page-hero {
+      position: relative; padding: 14rem 5% 6rem; overflow: hidden;
+      
+    }
+    .prov-hero-bg{
+      position: absolute;
+      inset: 0;
+      background: {% if prato_destaque %}url('{{prato_destaque.foto.url}}') center/cover no-repeat {% else %} var(--terra) {% endif %};
+    }
+    .prov-hero-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to bottom,rgba(13,17,23,0.2) 0%,rgba(13,17,23,0.0) 25%,rgba(13,17,23,0.6) 65%,rgba(13,17,23,0.97) 100%);
+    }
+     .page-hero::before {
+      content: 'GASTRONOMIA'; position: absolute; font-family: 'Bebas Neue', sans-serif;
+      font-size: 22vw; color: rgba(0,0,0,0.1); top: 50%; left: 50%;
+      transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; letter-spacing: 10px;
+    }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: url('{{destaque.foto.url}}') center/cover no-repeat;
+      opacity: 0.18;
+    } 
+    .hero-inner { position: relative; z-index: 1; max-width: 800px; }
+    .hero-eyebrow { font-size: 0.62rem; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: rgba(255,255,255,0.5); }
+    h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: var(--branco); line-height: 1.05; margin-bottom: 1.5rem; }
+    h1 em { font-style: italic; color: rgba(255,255,255,0.7); }
+    .hero-desc { font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.75); max-width: 540px; }
+
+    /* FILTROS */
+    .filtros-bar {
+      background: var(--escuro); padding: 1.8rem 5%;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky; top: 72px; z-index: 50;
+    }
+    .filtros-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .filtro-label { font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cinza); white-space: nowrap; }
+    .filtros-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .chip {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--cinza); padding: 0.45rem 1.1rem; border-radius: 2px;
+      font-size: 0.72rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+    }
+    .chip:hover, .chip.active { background: var(--terra); border-color: var(--terra); color: var(--branco); }
+    .filtros-search { margin-left: auto; }
+    .filtros-search input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--branco); padding: 0.55rem 1rem; border-radius: 2px; font-size: 0.8rem; outline: none; font-family: 'Inter', sans-serif; width: 220px; }
+    .filtros-search input::placeholder { color: var(--cinza); }
+
+    /* CONTEÚDO */
+    .content-wrapper { max-width: 1400px; margin: 0 auto; padding: 4rem 5%; }
+
+    .section-label { font-size: 0.6rem; letter-spacing: 5px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.75rem; }
+    .section-label::after { content: ''; display: block; width: 40px; height: 1px; background: var(--terra); }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; color: var(--branco); margin-bottom: 3rem; }
+
+    /* DESTAQUE */
+    .prato-destaque {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; margin-bottom: 5rem;
+      border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06);
+    }
+    .destaque-img { position: relative; }
+    .destaque-img img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; }
+    .destaque-badge { position: absolute; top: 1.5rem; left: 1.5rem; background: var(--ocre); color: var(--noite); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 2px; font-weight: 700; }
+    .destaque-content { background: var(--escuro); padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+    .prato-provincia { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.5rem; }
+    .prato-nome-lg { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--branco); margin-bottom: 1rem; line-height: 1.1; }
+    .prato-desc { font-size: 0.9rem; line-height: 1.8; color: var(--cinza); margin-bottom: 1.5rem; }
+    .prato-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--cinza); padding: 0.3rem 0.8rem; border-radius: 2px; font-size: 0.68rem; }
+    .tag.vegetariano { border-color: var(--verde); color: #5cb88a; }
+    .preco-badge { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--ocre); }
+    .btn-primary { background: var(--terra); color: var(--branco); padding: 0.9rem 2rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; border-radius: 2px; display: inline-block; transition: background 0.25s; }
+    .btn-primary:hover { background: var(--ocre); color: var(--noite); }
+
+    /* GRID PRATOS */
+    .pratos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 5rem; }
+    .prato-card { background: var(--escuro); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: border-color 0.3s, transform 0.3s; }
+    .prato-card:hover { border-color: var(--terra); transform: translateY(-4px); }
+    .prato-img { position: relative; }
+    .prato-img img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.5s; }
+    .prato-card:hover .prato-img img { transform: scale(1.05); }
+    .prato-faixa { position: absolute; bottom: 0.8rem; right: 0.8rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--ocre); background: rgba(13,17,23,0.85); padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .prato-body { padding: 1.5rem; }
+    .prato-prov { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--terra); margin-bottom: 0.4rem; }
+    .prato-nome { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--branco); margin-bottom: 0.6rem; }
+    .prato-resumo { font-size: 0.8rem; line-height: 1.65; color: var(--cinza); margin-bottom: 1rem; }
+    .prato-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; }
+    .prato-badges { display: flex; gap: 0.4rem; }
+    .badge-sm { font-size: 0.62rem; padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .badge-veg { background: rgba(45,106,79,0.2); color: #5cb88a; border: 1px solid rgba(45,106,79,0.3); }
+    .badge-hot { background: rgba(194,91,42,0.2); color: var(--ocre); border: 1px solid rgba(194,91,42,0.3); }
+    .ver-receita { font-size: 0.7rem; color: var(--terra); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    .ver-receita:hover { color: var(--ocre); }
+
+    /* BANNER PROVINCIAL */
+    .banner-provincial {
+      background: var(--escuro); border-radius: 4px; padding: 3rem 4rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 3rem;
+      border: 1px solid rgba(255,255,255,0.06); margin-bottom: 5rem; flex-wrap: wrap;
+    }
+    .banner-text h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--branco); margin-bottom: 0.6rem; }
+    .banner-text p { font-size: 0.88rem; color: var(--cinza); line-height: 1.7; max-width: 480px; }
+    .provincias-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .prov-chip { background: rgba(194,91,42,0.15); border: 1px solid rgba(194,91,42,0.3); color: var(--terra); padding: 0.4rem 0.9rem; border-radius: 2px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; }
+    .prov-chip:hover { background: var(--terra); color: var(--branco); }
+
+    /* RECEITA MODAL */
+    .ingredientes-section { background: var(--escuro); border-radius: 4px; padding: 3rem; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 3rem; }
+    .ingredientes-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+    .ingrediente-lista { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .ingrediente-lista li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; color: var(--cinza); padding-bottom: 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .ingrediente-lista li::before { content: '—'; color: var(--ocre); font-size: 0.7rem; }
+    .passo-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .passo { display: flex; gap: 1.5rem; }
+    .passo-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--terra); opacity: 0.6; line-height: 1; flex-shrink: 0; width: 30px; }
+    .passo-text { font-size: 0.87rem; line-height: 1.75; color: var(--cinza); padding-top: 0.2rem; }
+
+    footer { background: #070B10; padding: 3rem 5%; border-top: 1px solid rgba(255,255,255,0.04); }
+    .footer-bottom { font-size: 0.72rem; color: rgba(140,155,176,0.5); display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+
+    @media (max-width: 1024px) { .pratos-grid { grid-template-columns: 1fr 1fr; } .prato-destaque { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .nav-links { display: none; } .pratos-grid { grid-template-columns: 1fr; } .ingredientes-grid { grid-template-columns: 1fr; } .banner-provincial { flex-direction: column; } }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="prov-hero-bg"></div>
+    <div class="prov-hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Sabores de Angola</div>
+      <h1>Gastronomia<br/>com <em>Alma</em></h1>
+      <p class="hero-desc">Do muamba de galinha ao calulu de peixe — a cozinha angolana é uma celebração onde tradição, terra e mar se encontram numa mesa única.</p>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-bar">
+    <div class="filtros-inner">
+      <span class="filtro-label">Filtrar por:</span>
+      <div class="filtros-chips">
+        <span class="chip active" onclick="filtrar(this,'todos')">Todos</span>
+        <span class="chip" onclick="filtrar(this,'luanda')">Luanda</span>
+        <span class="chip" onclick="filtrar(this,'benguela')">Benguela</span>
+        <span class="chip" onclick="filtrar(this,'huambo')">Huambo</span>
+        <span class="chip" onclick="filtrar(this,'namibe')">Namibe</span>
+        <span class="chip" onclick="filtrar(this,'cabinda')">Cabinda</span>
+        <span class="chip badge-veg" style="border-color:rgba(45,106,79,0.4);color:#5cb88a;" onclick="filtrar(this,'vegetariano')">🌿 Vegetariano</span>
+      </div>
+      <div class="filtros-search">
+        <input type="text" placeholder="🔍  Pesquisar prato..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="content-wrapper">
+
+    <!-- DESTAQUE -->
+    {% if prato_destaque %}
+      <div class="section-label">Prato em Destaque</div>
+      <div class="prato-destaque">
+        <div class="destaque-img">
+          {% if prato_destaque.foto %}
+            <img src="{{prato_destaque.foto.url}}" alt="{{prato_destaque.nome}}" />
+          {% endif %}
+          <span class="destaque-badge">⭐ Ícone Nacional</span>
+        </div>
+        <div class="destaque-content">
+          <div class="prato-provincia">📍 Nacional · Todas as Províncias</div>
+          <div class="prato-nome-lg">{{prato_destaque.nome}}</div>
+          <p class="prato-desc">{{prato_destaque.descricao}}</p>
+          <div class="prato-tags">
+            <span class="tag">Óleo de Dendém</span>
+            <span class="tag">Quiabo</span>
+            <span class="tag">Funge</span>
+            <span class="tag badge-hot">🌶 Picante</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:2rem;">
+            <div>
+              <div style="font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--cinza);margin-bottom:0.2rem;">Faixa de Preço</div>
+              <span class="preco-badge">{{prato_destaque.faixa_preco}} - {{prato_destaque.get_faixa_preco_display}}</span>
+            </div>
+            <a href="#receita-muamba" class="btn-primary">Ver Receita →</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- GRID PRATOS -->
+    <div class="section-label">Pratos Típicos</div>
+    <p class="section-title">{{provincias|length}} Províncias,<br/>Sabores Únicos</p>
+
+    <div class="pratos-grid" id="pratos-grid">
+
+      {% for g in gastronomias %}
+
+        <div class="prato-card" data-prov="nacional">
+          <div class="prato-img">
+            {% if g.foto %}
+              <img src="{{g.foto.url}}" alt="Calulu de Peixe" />
+            {% endif %}
+            <span class="prato-faixa">{{g.faixa_preco}}</span>
+          </div>
+          <div class="prato-body">
+            {% comment %} <div class="prato-prov">📍 Costa Angolana </div> {% endcomment %}
+            <div class="prato-nome">{{g.nome}}</div>
+            <p class="prato-resumo"> {{g.modo_preparo}} </p>
+            <div class="prato-footer">
+              {% if g.ingredientes %}
+                <div class="prato-badges"><span class="badge-sm badge-hot">
+                  {{g.ingredientes}}
+                </span></div>
+              {% endif %}
+              {% if g.vegetariano %}
+                <div class="prato-badges"><span class="badge-sm badge-hot">
+                  Vegetariano
+                </span></div>
+              {% endif %}
+              <a href="#" class="ver-receita">Ver Receita →</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      
+    </div>
+
+    <!-- BANNER PROVINCIAL -->
+    <div class="banner-provincial">
+      <div class="banner-text">
+        <h3>Explora por Província</h3>
+        <p>Cada província tem o seu sabor característico, moldado pela geografia, pelo clima e pelas tradições dos seus povos. Escolhe uma região para descobrir os seus pratos exclusivos.</p>
+      </div>
+      <div class="provincias-chips">
+
+        {% for p in provincias %}
+          <a href="#" class="prov-chip">{{p.nome}}</a>
+        {% endfor %}
+        
+      </div>
+    </div>
+
+    <!-- RECEITA DESTAQUE -->
+    <div id="receita-muamba">
+      <div class="section-label">Receita Tradicional</div>
+      <p class="section-title" style="margin-bottom:2rem;">Como Preparar Muamba<br/>de Galinha</p>
+      <div class="ingredientes-section">
+        <div class="ingredientes-grid">
+          <div>
+            <div style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--cinza);margin-bottom:1.2rem;">Ingredientes (4 pessoas)</div>
+            <ul class="ingrediente-lista">
+              <li>1 galinha grande cortada em pedaços</li>
+              <li>250 ml de óleo de dendém</li>
+              <li>500 g de quiabo cortado</li>
+              <li>2 beringelas médias</li>
+              <li>3 tomates maduros</li>
+              <li>2 cebolas grandes</li>
+              <li>4 dentes de alho</li>
+              <li>Piripíri a gosto</li>
+              <li>Sal e pimenta preta</li>
+              <li>Folhas de louro</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--cinza);margin-bottom:1.2rem;">Modo de Preparação</div>
+            <div class="passo-list">
+              <div class="passo">
+                <span class="passo-num">01</span>
+                <p class="passo-text">Tempera a galinha com alho picado, piripíri, sal, pimenta e louro. Deixa marinar pelo menos 2 horas no frigorífico.</p>
+              </div>
+              <div class="passo">
+                <span class="passo-num">02</span>
+                <p class="passo-text">Num tacho, aquece o óleo de dendém e frita a cebola até ficar dourada. Junta o tomate e refoga mais 5 minutos.</p>
+              </div>
+              <div class="passo">
+                <span class="passo-num">03</span>
+                <p class="passo-text">Adiciona os pedaços de galinha marinada e cozinha em lume médio durante 20 minutos, virando de vez em quando.</p>
+              </div>
+              <div class="passo">
+                <span class="passo-num">04</span>
+                <p class="passo-text">Junta o quiabo e a beringela. Adiciona um pouco de água se necessário. Cozinha mais 15 minutos até o molho engrossar.</p>
+              </div>
+              <div class="passo">
+                <span class="passo-num">05</span>
+                <p class="passo-text">Serve quente com funge de bombó ou arroz branco. Decora com coentros frescos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2025 Explora Angola · Todos os direitos reservados</span>
+      <span>Feito com ❤ em Angola</span>
+    </div>
+  </footer>
+
+  <script>
+    function filtrar(el, tipo) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
+</body>
+</html>
+{% endblock  %}

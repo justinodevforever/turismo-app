@@ -1,0 +1,493 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{provincia.nome}} — Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --terra:#C25B2A; --ocre:#E8A04A; --noite:#0D1117; --escuro:#1A2130;
+      --branco:#F7F3EE; --cinza:#8C9BB0; --verde:#2D6A4F;
+      --display:'Playfair Display',serif; --corpo:'Inter',sans-serif; --stamp:'Bebas Neue',sans-serif;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--corpo);background:var(--noite);color:var(--branco);overflow-x:hidden;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.05);}
+    .nav-logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+    .nav-logo .marca{font-family:var(--stamp);font-size:1.6rem;letter-spacing:3px;color:var(--branco);}
+    .nav-logo .sub{font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--ocre);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{text-decoration:none;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(247,243,238,0.75);transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--ocre);}
+    .nav-cta{background:var(--terra);color:var(--branco)!important;padding:0.6rem 1.4rem;border-radius:2px;font-size:0.75rem!important;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background 0.2s;}
+    .nav-cta:hover{background:var(--ocre)!important;color:var(--noite)!important;}
+
+    /* HERO CINEMATIC */
+    .prov-hero{
+      position:relative; height:100vh; min-height:600px;
+      display:flex; align-items:flex-end; padding-bottom:8vh;
+      overflow:hidden;
+    }
+    .prov-hero-bg{
+      position:absolute; inset:0;
+      background:url('{{provincia.foto_capa.url}}') center/cover no-repeat;
+      animation:heroZoom 18s ease-in-out infinite alternate;
+    }
+    @keyframes heroZoom{from{transform:scale(1.04);}to{transform:scale(1.0);}}
+    .prov-hero-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to bottom,rgba(13,17,23,0.2) 0%,rgba(13,17,23,0.0) 25%,rgba(13,17,23,0.6) 65%,rgba(13,17,23,0.97) 100%);
+    }
+    .prov-hero-content{
+      position:relative;z-index:2;padding:0 5% 0 8%;max-width:1000px;
+    }
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(247,243,238,0.5);margin-bottom:1.5rem;}
+    .breadcrumb a{color:rgba(247,243,238,0.5);text-decoration:none;transition:color 0.2s;}
+    .breadcrumb a:hover{color:var(--ocre);}
+    .breadcrumb span{color:var(--terra);}
+    .prov-region-badge{
+      display:inline-flex;align-items:center;gap:0.6rem;
+      font-size:0.62rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--ocre);
+      margin-bottom:1rem;
+    }
+    .prov-region-badge::before{content:'';width:28px;height:1px;background:var(--ocre);}
+    .prov-hero-title{font-family:var(--display);font-size:clamp(4rem,9vw,8rem);font-weight:900;line-height:0.95;color:var(--branco);margin-bottom:1.5rem;}
+    .prov-hero-intro{font-size:1.05rem;line-height:1.75;color:rgba(247,243,238,0.7);max-width:580px;margin-bottom:2.5rem;}
+    .prov-hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+    .btn-primary{background:var(--terra);color:var(--branco);padding:1rem 2.2rem;text-decoration:none;font-size:0.78rem;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;border-radius:2px;transition:background 0.25s,transform 0.2s;display:inline-block;}
+    .btn-primary:hover{background:var(--ocre);color:var(--noite);transform:translateY(-2px);}
+    .btn-ghost{border:1px solid rgba(247,243,238,0.3);color:var(--branco);padding:1rem 2.2rem;text-decoration:none;font-size:0.78rem;letter-spacing:2.5px;text-transform:uppercase;border-radius:2px;transition:border-color 0.25s,background 0.25s;display:inline-block;}
+    .btn-ghost:hover{border-color:var(--ocre);background:rgba(232,160,74,0.1);}
+
+    /* STATS BAR */
+    .stats-bar{
+      background:var(--terra);
+      display:grid;grid-template-columns:repeat(4,1fr);
+    }
+    .stat-cell{
+      padding:2rem 1.5rem; text-align:center;
+      border-right:1px solid rgba(255,255,255,0.15);
+    }
+    .stat-cell:last-child{border-right:none;}
+    .stat-n{font-family:var(--stamp);font-size:2.5rem;letter-spacing:2px;color:var(--branco);line-height:1;}
+    .stat-l{font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-top:0.3rem;}
+
+    /* TAB NAV */
+    .tab-nav{
+      background:var(--escuro);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      position:sticky;top:72px;z-index:50;
+    }
+    .tab-nav-inner{max-width:1400px;margin:0 auto;display:flex;padding:0 5%;overflow-x:auto;}
+    .tab-btn{
+      background:transparent;border:none;border-bottom:2px solid transparent;
+      color:var(--cinza);padding:1.3rem 1.5rem;font-family:var(--corpo);
+      font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+      transition:color 0.2s,border-color 0.2s;white-space:nowrap;
+    }
+    .tab-btn:hover{color:var(--branco);}
+    .tab-btn.active{color:var(--ocre);border-bottom-color:var(--ocre);}
+
+    /* SECTIONS */
+    .content-section{display:none;padding:6rem 5%;max-width:1400px;margin:0 auto;}
+    .content-section.active{display:block;}
+    .section-label{font-size:0.6rem;letter-spacing:5px;text-transform:uppercase;color:var(--terra);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.75rem;}
+    .section-label::after{content:'';display:block;width:40px;height:1px;background:var(--terra);}
+    .section-title{font-family:var(--display);font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--branco);line-height:1.15;margin-bottom:2rem;}
+
+    /* VISÃO GERAL */
+    .overview-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:start;}
+    .prose{font-size:0.95rem;line-height:1.9;color:var(--cinza);}
+    .prose p+p{margin-top:1.2rem;}
+    .prose strong{color:var(--branco);}
+    .info-cards{display:flex;flex-direction:column;gap:1rem;}
+    .info-card{background:var(--escuro);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:1.5rem;}
+    .info-card-label{font-size:0.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--terra);margin-bottom:0.5rem;}
+    .info-card-value{font-size:1rem;color:var(--branco);font-weight:500;}
+
+    /* MUNICÍPIOS */
+    .municipios-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .mun-card{
+      background:var(--escuro);border:1px solid rgba(255,255,255,0.06);border-radius:3px;
+      padding:1.5rem;transition:border-color 0.3s,transform 0.3s;cursor:pointer;
+    }
+    .mun-card:hover{border-color:var(--terra);transform:translateY(-4px);}
+    .mun-nome{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--branco);margin-bottom:0.4rem;}
+    .mun-info{font-size:0.75rem;color:var(--cinza);line-height:1.6;}
+
+    /* PONTOS TURÍSTICOS */
+    .pontos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .ponto-card{border:1px solid rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:pointer;background:var(--escuro);}
+    .ponto-card:hover{border-color:var(--terra);transform:translateY(-6px);}
+    .ponto-img{width:100%;height:200px;object-fit:cover;display:block;transition:transform 0.5s;}
+    .ponto-card:hover .ponto-img{transform:scale(1.05);}
+    .ponto-body{padding:1.5rem;}
+    .ponto-cat{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--terra);margin-bottom:0.5rem;}
+    .ponto-nome{font-family:var(--display);font-size:1.1rem;font-weight:700;color:var(--branco);margin-bottom:0.5rem;line-height:1.2;}
+    .ponto-desc{font-size:0.8rem;color:var(--cinza);line-height:1.65;margin-bottom:1rem;}
+    .ponto-meta{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);padding-top:1rem;}
+    .ponto-rating{font-size:0.78rem;color:var(--ocre);font-weight:600;}
+    .ponto-gratuito{font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--verde);background:rgba(45,106,79,0.2);padding:0.25rem 0.6rem;border-radius:2px;}
+
+    /* GASTRONOMIA */
+    .pratos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    .prato-card{background:var(--escuro);border:1px solid rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;transition:border-color 0.3s;}
+    .prato-card:hover{border-color:var(--ocre);}
+    .prato-img{width:100%;height:180px;object-fit:cover;}
+    .prato-body{padding:1.3rem;}
+    .prato-nome{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--branco);margin-bottom:0.4rem;}
+    .prato-desc{font-size:0.78rem;color:var(--cinza);line-height:1.6;}
+    .prato-meta{display:flex;align-items:center;justify-content:space-between;margin-top:0.8rem;}
+    .prato-preco{font-size:0.7rem;color:var(--ocre);}
+    .prato-veg{font-size:0.65rem;background:rgba(45,106,79,0.25);color:#6fcf97;padding:0.2rem 0.6rem;border-radius:2px;}
+
+    /* CULTURA */
+    .cultura-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+    .cultura-img-wrap{border-radius:3px;overflow:hidden;}
+    .cultura-img-wrap img{width:100%;height:460px;object-fit:cover;display:block;}
+    .highlight-list{list-style:none;display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}
+    .highlight-list li{display:flex;align-items:flex-start;gap:1rem;font-size:0.88rem;color:rgba(247,243,238,0.75);line-height:1.6;}
+    .highlight-list li::before{content:'';width:20px;height:1px;background:var(--ocre);flex-shrink:0;margin-top:0.75rem;}
+
+    /* FADE */
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .fade-up.visible{opacity:1;transform:translateY(0);}
+
+    /* FOOTER */
+    footer{background:#070B10;padding:5rem 5% 2.5rem;border-top:1px solid rgba(255,255,255,0.04);}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;margin-bottom:4rem;}
+    .footer-brand .marca{font-family:var(--stamp);font-size:2rem;letter-spacing:3px;color:var(--branco);}
+    .footer-brand .sub{font-size:0.58rem;letter-spacing:4px;color:var(--ocre);margin-bottom:1.2rem;display:block;}
+    .footer-brand p{font-size:0.82rem;color:var(--cinza);line-height:1.75;max-width:280px;}
+    .footer-col h4{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--branco);margin-bottom:1.5rem;}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.75rem;}
+    .footer-col ul a{text-decoration:none;font-size:0.82rem;color:var(--cinza);transition:color 0.2s;}
+    .footer-col ul a:hover{color:var(--ocre);}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,0.05);padding-top:2rem;display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:rgba(140,155,176,0.5);}
+
+    @media(max-width:1024px){.overview-grid,.cultura-layout{grid-template-columns:1fr;}.municipios-grid,.pontos-grid,.pratos-grid{grid-template-columns:1fr 1fr;}.stats-bar{grid-template-columns:repeat(3,1fr);}.footer-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){.nav-links{display:none;}.stats-bar{grid-template-columns:1fr 1fr;}.municipios-grid,.pontos-grid,.pratos-grid{grid-template-columns:1fr;}.prov-hero-content{padding:0 5%;}.footer-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="prov-hero">
+    <div class="prov-hero-bg"></div>
+    <div class="prov-hero-overlay"></div>
+    <div class="prov-hero-content">
+      <div class="breadcrumb">
+        <a href="/">Início</a>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        <a href="{% url 'provincias' %}">Províncias</a>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        <span>{{provincia.nome}}</span>
+      </div>
+      <div class="prov-region-badge">{{provincia.regiao.nome}} · Código AO-{{provincia.slug}}</div>
+      <h1 class="prov-hero-title">{{provincia.nome}}</h1>
+      <p class="prov-hero-intro">
+        {{provincia.historia}}
+      </p>
+      <div class="prov-hero-actions">
+        <a href="pontos-turisticos.html?provincia=malanje" class="btn-primary">Ver Destinos</a>
+        <a href="assistente-ia.html" class="btn-ghost">Planear com IA</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-cell">
+      <div class="stat-n">{{provincia.num_municipios|default:"0"}}</div>
+      <div class="stat-l">Municípios</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">{{provincia.populacao|default:"0"}}</div>
+      <div class="stat-l">Habitantes</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">{{provincia.area_km2|default:"0"}}</div>
+      <div class="stat-l">km²</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-n">{% if pontos_turisticos|length > 18 %}18+ {% else %}{{pontos_turisticos|length}}{% endif %}</div>
+      <div class="stat-l">Pontos Turísticos</div>
+    </div>
+    
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" onclick="showTab(this,'visao-geral')">Visão Geral</button>
+      <button class="tab-btn" onclick="showTab(this,'municipios')">Municípios</button>
+      <button class="tab-btn" onclick="showTab(this,'pontos')">Pontos Turísticos</button>
+      <button class="tab-btn" onclick="showTab(this,'gastronomia')">Gastronomia</button>
+      <button class="tab-btn" onclick="showTab(this,'cultura')">Cultura & História</button>
+      <button class="tab-btn" onclick="showTab(this,'servicos')">Hotéis & Guias</button>
+    </div>
+  </div>
+
+  <!-- VISÃO GERAL -->
+  <div id="visao-geral" class="content-section active">
+    <div class="overview-grid fade-up">
+      <div>
+        <div class="section-label">Sobre a Província</div>
+        <h2 class="section-title">O Coração Verde<br/>de Angola</h2>
+        <div class="prose">
+          <p>
+            {{provincia.historia}}
+          </p>
+          
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card-label">Capital da Província</div>
+          <div class="info-card-value">Cidade de {{provincia.capital}}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Região</div>
+          <div class="info-card-value">{{provincia.regiao}} de Angola</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Código ISO</div>
+          <div class="info-card-value">AO-{{provincia.slug}}</div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- MUNICÍPIOS -->
+  <div id="municipios" class="content-section">
+    <div class="section-label">Divisão Administrativa</div>
+    <h2 class="section-title">{{municipios|length|default:"0"}} Municípios</h2>
+    <div class="municipios-grid">
+
+      {% for m in municipios %}
+        <div class="mun-card fade-up"><div class="mun-nome">{{m.nome}}</div><div class="mun-info">{% if m.descricao|length > 50 %}{{m.descricao|slice:50}}... {% else %}{{m.descricao}}{% endif %}</div></div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- PONTOS TURÍSTICOS -->
+  <div id="pontos" class="content-section">
+    <div class="section-label">Destinos em {{provincia.nome}}</div>
+    <h2 class="section-title">Pontos Turísticos</h2>
+    <div class="pontos-grid">
+
+      {% for p in pontos_turisticos %}
+
+        <div class="ponto-card fade-up">
+          <img class="ponto-img" src="{{p.foto_principal.url}}" alt="{{p.nome}}" />
+          <div class="ponto-body">
+            <div class="ponto-cat">{% for c in p.categorias.all %} {{c.nome}} . {% endfor %}</div>
+            <div class="ponto-nome">{{p.nome}}</div>
+            <p class="ponto-desc">
+              {% if p.descricao|length > 50 %} {{p.descricao|slice:50}}... {% else %} {{p.descricao}} {% endif %}
+            </p>
+            <div class="ponto-meta">
+              <div class="ponto-rating">⭐ {{p.media_avaliacao}} · {{p.total_avaliacoes}} avaliações</div>
+              <span class="ponto-gratuito">
+                {% if p.entrada_gratuita %} Entrada Gratuita {% else %} {{p.preco_entrada}} {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+      
+    </div>
+    <div style="text-align:center;margin-top:3rem;">
+      <a href="pontos-turisticos.html?provincia=malanje" class="btn-ghost">Ver Todos os Pontos Turísticos de {{provincia.nome}}</a>
+    </div>
+  </div>
+
+  <!-- GASTRONOMIA -->
+  <div id="gastronomia" class="content-section">
+
+    <div class="section-label">Sabores de {{provincia.nome}}</div>
+    <h2 class="section-title">Pratos Típicos</h2>
+
+    <div class="pratos-grid">
+
+      {% for g in gastronomias %}
+        <div class="prato-card fade-up">
+          <img class="prato-img" src="{{g.foto.url}}" alt="{{g.nome}}" />
+          <div class="prato-body">
+            <div class="prato-nome">{{g.nome}}</div>
+            <p class="prato-desc">
+              {% if g.descricao|length > 50 %} {{g.descricao|slice:50}} {% else %} {{g.descricao}} {% endif %}
+            </p>
+            <div class="prato-meta">
+              <span class="prato-preco">{{g.faixa_preco}} . {{g.get_faixa_preco_display}}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      
+    </div>
+
+    <div style="text-align:center;margin-top:3rem;">
+      <a href="gastronomia.html?provincia=malanje" class="btn-ghost">Ver Todos os Pratos de {{provincia.nome}}</a>
+    </div>
+  </div>
+
+  <!-- CULTURA -->
+  <div id="cultura" class="content-section">
+    <div class="cultura-layout fade-up">
+      <div class="cultura-img-wrap">
+        <img src="{{provincia.foto_capa.url}}" alt="Cultura Malanje" />
+      </div>
+      <div>
+        <div class="section-label">História & Cultura</div>
+        <div class="prose">
+          <p>
+            {{provincia.historia|default:"Aguardando pela informação da história "}}
+          </p>
+        </div>
+        <ul class="highlight-list">
+          <li>{{provincia.cultura|default:"Aguardando pela informação da cultura"}}</li>
+          <li>{{provincia.festividades|default:"Aguardando pela informação das festividades"}}</li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVIÇOS -->
+  <div id="servicos" class="content-section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;">
+      <div>
+        <div class="section-label">Onde Ficar</div>
+        <h2 class="section-title" style="font-size:2rem;margin-bottom:1.5rem;">Hotéis em {{provincia.nome}}</h2>
+        
+        {% for h in hoteis %}
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="info-card fade-up">
+              <div class="info-card-label"> 
+                {% if h.classificacao == '1' %}
+                  ★ Hotel
+                {% elif h.classificacao == '2' %}
+                  ★★ Hotel
+                {% elif h.classificacao == '3' %}
+                  ★★★ Hotel
+                {% elif h.classificacao == '4' %}
+                  ★★★★ Hotel
+                {% elif h.classificacao == '5'%}
+                  ★★★★★ Hotel
+                {% endif %}
+              </div>
+              <div class="info-card-value" style="font-size:1.1rem;margin-bottom:0.3rem;">{{h.empresa.nome}}</div>
+              <div style="font-size:0.78rem;color:var(--cinza);">
+                {% if h.tem_wifi %}
+                  Com Wi-fi
+                {% endif %}
+                {% if h.tem_piscina %}
+                  | Com Piscina
+                {% endif %}
+                {% if h.tem_estacionamento %}
+                  | Com Estacionamento
+                {% endif %}
+                {% if h.tem_academia %}
+                  | Com Academia
+                {% endif %}
+                {% if h.tem_spa %}
+                  | Com Spa
+                {% endif %}
+                {% if h.tem_restaurante %}
+                  | Com Restauroante
+                {% endif %}
+                {% if h.aceita_animais %}
+                  | Com Aceita Animal
+                {% endif %}
+                {% if h.tem_bar %}
+                  | Com Bar
+                {% endif %}
+                {% if h.tem_ar_condicionado %}
+                  | Com Ar Condicionado
+                {% endif %}
+                {% if h.tem_wifi %}
+                  | Com Serviço de Quarto
+                {% endif %}
+              </div>
+              <div style="font-size:0.85rem;color:var(--ocre);margin-top:0.5rem;font-family:var(--stamp);letter-spacing:1px;">
+                {{h.preco_min_noite|default:"__"}} AOA / p. mínimo noite | {{h.preco_max_noite|default:"__"}} AOA / p. máximo noite
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        <div style="margin-top:1.5rem;">
+          <a href="/alojamentos/?nome_provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Alojamentos</a>
+        </div>
+
+      </div>
+
+      <div>
+        <div class="section-label">Conhece com um Local</div>
+        <h2 class="section-title" style="font-size:2rem;margin-bottom:1.5rem;">Guias de {{provincia.nome}}</h2>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          
+          {% for guia in guias %}
+            <div class="info-card fade-up" style="display:flex;gap:1.2rem;align-items:center;">
+              <img src="{{guia.foto.url}}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--terra);" alt="Guia">
+              <div>
+                <div style="font-family:var(--display);font-weight:700;color:var(--branco);">
+                  {{guia.usuario.nome}}
+                </div>
+                <div style="font-size:0.72rem;color:var(--terra);letter-spacing:1.5px;text-transform:uppercase;margin:0.2rem 0;">
+                  {{guia.idiomas}}
+                </div>
+                <div style="font-size:0.75rem;color:var(--cinza);">
+                  {% for e in guia.especializacoes %}
+                    {{e}}
+                    {%empty%}
+                    Sem especialidades definidas!
+                  {% endfor %}
+                   · ⭐ {{guia.media_avaliacao}}
+                  
+                  </div>
+              </div>
+            </div>
+          {%empty%}
+            <h3>Nenhum Guia Encontrado Em {{provincia.nome}}!</h3>
+          {% endfor %}
+          
+        </div>
+        <div style="margin-top:1.5rem;">
+          <a href="/turismo/guia-turistico/?provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Guias</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function showTab(btn, id) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({top: document.querySelector('.tab-nav').offsetTop - 72, behavior:'smooth'});
+    }
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+    },{threshold:0.1});
+    fadeEls.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
+{% endblock  %}

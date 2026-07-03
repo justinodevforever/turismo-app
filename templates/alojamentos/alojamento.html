@@ -1,0 +1,313 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotéis & Alojamentos — Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root { --terra:#C25B2A; --ocre:#E8A04A; --noite:#0D1117; --escuro:#1A2130; --branco:#F7F3EE; --cinza:#8C9BB0; --verde:#2D6A4F; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--noite); color:var(--branco); overflow-x:hidden; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.25rem 5%; display:flex; align-items:center; justify-content:space-between; background:rgba(13,17,23,0.95); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,0.05); }
+    .nav-logo { display:flex; flex-direction:column; line-height:1; text-decoration:none; }
+    .nav-logo .marca { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:3px; color:var(--branco); }
+    .nav-logo .sub { font-size:0.6rem; letter-spacing:4px; text-transform:uppercase; color:var(--ocre); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { text-decoration:none; font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:rgba(247,243,238,0.75); transition:color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--ocre); }
+    .nav-cta { background:var(--terra); color:var(--branco); padding:0.6rem 1.4rem; border-radius:2px; font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:background 0.2s; }
+    .nav-cta:hover { background:var(--ocre); color:var(--noite); }
+
+    /* HERO */
+    .page-hero { position:relative; padding:14rem 5% 5rem; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1800&auto=format&fit=crop') center/cover; }
+    .hero-overlay { position:absolute; inset:0; background:linear-gradient(to right, rgba(13,17,23,0.92) 50%, rgba(13,17,23,0.5) 100%); }
+    .hero-inner { position:relative; z-index:1; max-width:700px; }
+    .hero-eyebrow { font-size:0.62rem; letter-spacing:5px; text-transform:uppercase; color:var(--ocre); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+    .hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--ocre); }
+    h1 { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,6vw,5rem); font-weight:900; color:var(--branco); line-height:1.05; margin-bottom:1.2rem; }
+    h1 em { font-style:italic; color:var(--ocre); }
+    .hero-desc { font-size:0.95rem; line-height:1.75; color:rgba(247,243,238,0.65); max-width:480px; }
+
+    /* BUSCA AVANÇADA */
+    .busca-section { background:var(--escuro); padding:2.5rem 5%; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .busca-inner { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:0; border:1px solid rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+    .busca-group { display:flex; flex-direction:column; padding:1rem 1.5rem; background:rgba(255,255,255,0.03); border-right:1px solid rgba(255,255,255,0.08); gap:0.2rem; }
+    .busca-group:last-of-type { border-right:none; }
+    .busca-group label { font-size:0.56rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); }
+    .busca-group select, .busca-group input { background:transparent; border:none; outline:none; font-size:0.9rem; font-family:'Inter',sans-serif; color:var(--branco); }
+    .busca-group select option { background:var(--escuro); }
+    .busca-btn { background:var(--terra); border:none; padding:1rem 2rem; color:var(--branco); font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; font-weight:600; cursor:pointer; transition:background 0.25s; white-space:nowrap; }
+    .busca-btn:hover { background:var(--ocre); color:var(--noite); }
+
+    /* LAYOUT */
+    .main-layout { max-width:1400px; margin:0 auto; padding:3rem 5%; display:grid; grid-template-columns:280px 1fr; gap:3rem; align-items:start; }
+
+    /* FILTROS LATERAL */
+    .filtros-sidebar { position:sticky; top:100px; }
+    .filtro-card { background:var(--escuro); border-radius:4px; padding:1.8rem; border:1px solid rgba(255,255,255,0.06); margin-bottom:1.2rem; }
+    .filtro-titulo { font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .filtro-opcao { display:flex; align-items:center; gap:0.7rem; padding:0.55rem 0; cursor:pointer; }
+    .filtro-opcao label { font-size:0.83rem; color:rgba(247,243,238,0.75); cursor:pointer; flex:1; }
+    .filtro-opcao input[type=checkbox] { accent-color:var(--terra); width:14px; height:14px; flex-shrink:0; }
+    .filtro-count { font-size:0.68rem; color:var(--cinza); }
+    .preco-range { width:100%; accent-color:var(--terra); margin:0.8rem 0; }
+    .preco-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--cinza); }
+    .estrelas-filtro { display:flex; flex-direction:column; gap:0.4rem; }
+    .estrela-row { display:flex; align-items:center; gap:0.6rem; cursor:pointer; }
+    .estrela-row input { accent-color:var(--terra); }
+    .estrela-val { font-size:0.82rem; color:var(--ocre); letter-spacing:2px; }
+    .comodidades-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; }
+    .comod-chip { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--cinza); padding:0.35rem 0.6rem; border-radius:2px; font-size:0.68rem; cursor:pointer; text-align:center; transition:all 0.2s; }
+    .comod-chip:hover, .comod-chip.ativo { background:rgba(194,91,42,0.15); border-color:var(--terra); color:var(--terra); }
+    .btn-limpar { background:transparent; border:1px solid rgba(255,255,255,0.1); color:var(--cinza); padding:0.6rem; border-radius:2px; font-family:'Inter',sans-serif; font-size:0.7rem; cursor:pointer; width:100%; transition:all 0.2s; }
+    .btn-limpar:hover { border-color:var(--terra); color:var(--terra); }
+
+    /* LISTAGEM */
+    .listagem-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+    .resultado-count { font-size:0.82rem; color:var(--cinza); }
+    .resultado-count strong { color:var(--branco); }
+    .ordem-select { background:var(--escuro); border:1px solid rgba(255,255,255,0.1); color:var(--branco); padding:0.55rem 1rem; border-radius:2px; font-size:0.78rem; font-family:'Inter',sans-serif; outline:none; cursor:pointer; }
+    .toggle-view { display:flex; gap:0.3rem; }
+    .toggle-btn { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:var(--cinza); padding:0.55rem 0.7rem; border-radius:2px; cursor:pointer; transition:all 0.2s; font-size:0.8rem; }
+    .toggle-btn.active { background:var(--terra); border-color:var(--terra); color:var(--branco); }
+
+    .hoteis-list { display:flex; flex-direction:column; gap:1.5rem; }
+    .hotel-card { background:var(--escuro); height: 220px; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.06); display:grid; grid-template-columns:320px 1fr; transition:border-color 0.3s; cursor:pointer; }
+    .hotel-card:hover { border-color:var(--terra); }
+    .hotel-img { position:relative; }
+    .hotel-img img { width:100%; height:100%; min-height:220px; object-fit:cover; display:block; transition:transform 0.5s; }
+    .hotel-card:hover .hotel-img img { transform:scale(1.04); }
+    .hotel-estrelas-badge { position:absolute; top:1rem; left:1rem; background:rgba(13,17,23,0.85); backdrop-filter:blur(4px); padding:0.3rem 0.6rem; border-radius:2px; font-size:0.75rem; color:var(--ocre); letter-spacing:2px; }
+    .hotel-verificado { position:absolute; top:1rem; right:1rem; background:rgba(45,106,79,0.9); color:#fff; font-size:0.58rem; letter-spacing:2px; text-transform:uppercase; padding:0.25rem 0.6rem; border-radius:2px; }
+    .hotel-info { padding:2rem; display:flex; flex-direction:column; justify-content:space-between; }
+    .hotel-top { margin-bottom:1rem; }
+    .hotel-tipo { font-size:0.6rem; letter-spacing:3px; text-transform:uppercase; color:var(--terra); margin-bottom:0.4rem; }
+    .hotel-nome { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--branco); margin-bottom:0.3rem; }
+    .hotel-loc { display:flex; align-items:center; gap:0.4rem; font-size:0.78rem; color:var(--cinza); margin-bottom:0.8rem; }
+    .hotel-desc { font-size:0.82rem; line-height:1.7; color:var(--cinza); margin-bottom:1rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .hotel-comodidades { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .comod { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07); color:var(--cinza); padding:0.25rem 0.65rem; border-radius:2px; font-size:0.65rem; }
+    .hotel-bottom { display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.05); padding-top:1rem; }
+    .hotel-rating-row { display:flex; align-items:center; gap:0.5rem; }
+    .rating-badge { background:var(--terra); color:var(--branco); font-weight:700; padding:0.25rem 0.6rem; border-radius:2px; font-size:0.82rem; }
+    .rating-text { font-size:0.75rem; color:var(--cinza); }
+    .hotel-preco-col { text-align:right; }
+    .preco-desde { font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--cinza); }
+    .preco-valor { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--ocre); line-height:1; }
+    .preco-noite { font-size:0.68rem; color:var(--cinza); }
+    .btn-reservar { background:var(--terra); color:var(--branco); border:none; padding:0.65rem 1.4rem; border-radius:2px; font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; font-weight:600; cursor:pointer; transition:background 0.25s; white-space:nowrap; }
+    .btn-reservar:hover { background:var(--ocre); color:var(--noite); }
+
+    /* PAGINAÇÃO */
+    /* Paginação */
+    .paginacao {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 4rem;
+    }
+    .pag-btn {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--cinza);
+      font-size: 0.82rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+      font-family: var(--corpo);
+    }
+    .pag-btn:hover, .pag-btn.ativo { background: var(--terra); border-color: var(--terra); color: var(--branco); }
+
+
+    footer { background:#070B10; padding:3rem 5%; border-top:1px solid rgba(255,255,255,0.04); }
+    .footer-bottom { font-size:0.72rem; color:rgba(140,155,176,0.5); display:flex; justify-content:space-between; align-items:center; max-width:1400px; margin:0 auto; }
+
+    @media (max-width:1024px) { .main-layout { grid-template-columns:1fr; } .filtros-sidebar { position:static; } .busca-inner { grid-template-columns:1fr 1fr; } }
+    @media (max-width:768px) { .nav-links { display:none; } .hotel-card { grid-template-columns:1fr; } .busca-inner { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Onde Ficar</div>
+      <h1>Alojamentos<br/>de <em>Excelência</em></h1>
+      <p class="hero-desc">De resorts à beira-mar a lodges no deserto — encontra o alojamento perfeito para a tua viagem por Angola.</p>
+      <a href="{% url 'restaurante_lista' %}" class="btn-primary">Restauroantes</a>
+    </div>
+  </div>
+
+  <!-- BUSCA -->
+  <div class="busca-section">
+    <form method="get" class="busca-inner">
+      <div class="busca-group">
+        <label>Destino</label>
+        <select name="provincia">
+          <option>Todas as Províncias</option>
+
+          {% for p in provincias %}
+            <option value="{{p.id}}">{{p.nome}}</option>
+          {% endfor %}
+          
+        </select>
+      </div>
+      <div class="busca-group">
+        <label>Check-in</label>
+        <input type="date" name="check_in" />
+      </div>
+      <div class="busca-group">
+        <label>Check-out</label>
+        <input type="date" name="check_in"/>
+      </div>
+      
+      <button type="submit" class="busca-btn">Pesquisar</button>
+    </form>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+
+    <!-- FILTROS -->
+    <aside class="filtros-sidebar">
+      
+    </aside>
+
+    <!-- LISTAGEM -->
+    <div>
+
+      <div class="hoteis-list">
+
+        {% for h in hoteis %}
+        
+          <div class="hotel-card">
+            
+            <div class="hotel-img">
+              {% if h.foto %}
+                <img src="{{h.foto.url}}" alt="{{h.nome}}" />
+              {% endif %}
+              <div class="hotel-estrelas-badge">
+                {% if h.classificacao == '1' %}
+                  ★
+                {% elif h.classificacao == '2' %}
+                  ★★
+                {% elif h.classificacao == '3' %}
+                  ★★★
+                {% elif h.classificacao == '4' %}
+                  ★★★★
+                {% elif h.classificacao == '5'%}
+                  ★★★★★
+                {% endif %}
+              </div>
+              {% if h.empresa.status_verificacao %}
+                <div class="hotel-verificado">✓ Verificado</div>
+              {% endif %}
+            </div>
+            <div class="hotel-info">
+              <div class="hotel-top">
+                <div class="hotel-nome">{{h.nome}}</div>
+                <h4> {{h.empresa.municipio}}</h4>
+                <div class="hotel-loc">📍 {{h.empresa.endereco}}</div>
+                <p class="hotel-desc">
+                  {{h.descricao}}
+                </p>
+                <div class="hotel-comodidades">
+                  {% if h.tem_wifi %}
+                    <span class="comod">Com Wi-fi</span>
+                  {% endif %}
+                  {% if h.tem_piscina %}
+                    <span class="comod">Com Piscina</span>
+                  {% endif %}
+                  {% if h.tem_estacionamento %}
+                    <span class="comod">Com Estacionamento</span>
+                  {% endif %}
+                  {% if h.tem_academia %}
+                    <span class="comod">Com Academia</span>
+                  {% endif %}
+                  {% if h.tem_spa %}
+                    <span class="comod">Com Spa</span>
+                  {% endif %}
+                  {% if h.tem_restaurante %}
+                    <span class="comod">Com Restauroante</span>
+                  {% endif %}
+                  {% if h.aceita_animais %}
+                    <span class="comod">Com Aceita Animal</span>
+                  {% endif %}
+                  {% if h.tem_bar %}
+                    <span class="comod">Com Bar</span>
+                  {% endif %}
+                  {% if h.tem_ar_condicionado %}
+                    <span class="comod">Com Ar Condicionado</span>
+                  {% endif %}
+                  {% if h.tem_wifi %}
+                    <span class="comod">Com Serviço de Quarto</span>
+                  {% endif %}
+                 
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+
+      <!-- PAGINAÇÃO -->
+      {% if hoteis.has_other_pages %}
+      <div class="paginacao">
+
+        {% if hoteis.has_previous %}
+          <a href="?page={{hoteis.previous_page_number}}&per_page={{per_page}}" class="pag-btn">‹</a>
+        {% endif %}
+
+        {% for num in hoteis.paginator.page_range %}
+          {% if hoteis.number == num %}
+            <button class="pag-btn ativo">{{num}}</button>
+          {% else %}
+            <a href="?page={{num}}&per_page={{per_page}}" class="pag-btn">{{num}}</a>
+          {% endif %}
+        {% endfor %}
+        
+        {% if hoteis.has_next %}
+          <a href="?page={{hoteis.next_page_number}}&per_page={{per_page}}" class="pag-btn">›</a>
+        {% endif %}
+      </div>
+    {% endif %}
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2025 Explora Angola · Todos os direitos reservados</span>
+      <span>Feito com ❤ em Angola</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.comod-chip').forEach(c => {
+      c.addEventListener('click', () => c.classList.toggle('ativo'));
+    });
+    document.querySelectorAll('.toggle-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.toggle-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
+{% endblock  %}

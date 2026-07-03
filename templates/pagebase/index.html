@@ -1,0 +1,408 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+
+<style>
+  /* Slideshow de fundo */
+    .hero-slides {
+      position: absolute;
+      inset: 0;
+    }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.8s ease;
+      transform: scale(1.04);
+      animation: kenburns 12s ease-in-out infinite alternate;
+    }
+    .hero-slide.active { opacity: 1; }
+
+    @keyframes kenburns {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.0); }
+    }
+
+    {% comment %} /* Slide backgrounds via gradientes + imagens Unsplash (Angola/África) */
+    {% for  in  %}{% endfor %}
+    .slide-1 { background-image: url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1800&auto=format&fit=crop'); }
+    .slide-2 { background-image: url('https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1800&auto=format&fit=crop'); }
+    .slide-3 { background-image: url('https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1800&auto=format&fit=crop'); }
+    .slide-4 { background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1800&auto=format&fit=crop'); } {% endcomment %}
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(13,17,23,0.15) 0%,
+        rgba(13,17,23,0.0)  30%,
+        rgba(13,17,23,0.55) 65%,
+        rgba(13,17,23,0.95) 100%
+      );
+    }
+</style>
+  
+    <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="hero">
+    <div class="hero-slides">
+      {% for p in provincias %}
+        <div style="background-image: url('{{p.foto_banner.url}}');" class="hero-slide slide-1 {% if p.ordem == 1 %}active{% endif %}"></div>
+      {% endfor %}
+      
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-rail">
+      <div class="hero-rail-line"></div>
+      <div class="hero-rail-dot"></div>
+      <div class="hero-rail-text">Descobre Angola</div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">Turismo Regional de Angola</div>
+      <h1 class="hero-title">
+        <span style="color: #fff;">O Coração<br/>
+        de </span><em>África</em><br/>
+        <span style="color: #fff;">Pulsa Aqui</span>
+      </h1>
+      <p class="hero-desc">
+        {{provincias|length}} províncias, cada uma com a sua alma. Do Maiombe verde ao Namibe dourado,
+        descobre Angola de dentro para fora.
+      </p>
+      <div class="hero-actions">
+        <a href="#provincias" class="btn-primary">Explorar Províncias</a>
+        <a href="#pontos" class="btn-ghost">Ver Destinos</a>
+      </div>
+    </div>
+
+    <div class="hero-dots">
+      {% for p in provincias %}
+       <div class="hero-dot {% if p.ordem == 1 %}active{% endif %}"></div>
+      {% endfor %}
+      
+    </div>
+
+    <div class="scroll-hint">
+      <span>Desliza</span>
+      <div class="scroll-hint-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SEARCH BAR
+  ============================================================ -->
+  <div class="search-section">
+    <div class="search-bar">
+      <div class="search-group">
+        <label>Destino</label>
+        <select name="provincia">
+          <option value="">Todas as Províncias</option>
+          {% for p in provincias %}
+            <option value="{{p.id}}">{{p.nome}}</option>
+          {% endfor %}
+          
+        </select>
+      </div>
+      
+      
+      <button class="search-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        Pesquisar
+      </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-strip">
+      <div class="stat-item fade-up">
+        <div class="stat-number"> {{provincias|length}} <span class="stat-unit">+</span></div>
+        <div class="stat-label">Províncias</div>
+      </div>
+      <div class="stat-item fade-up">
+        <div class="stat-number"> {{gastronomias|length}} <span class="stat-unit">+</span></div>
+        <div class="stat-label">Pontos Turísticos</div>
+      </div>
+      <div class="stat-item fade-up">
+        <div class="stat-number"> {{hoteis|length}} <span class="stat-unit">+</span></div>
+        <div class="stat-label">Hotéis & Alojamentos</div>
+      </div>
+      <div class="stat-item fade-up">
+        <div class="stat-number"> {{guias|length}} <span class="stat-unit">+</span></div>
+        <div class="stat-label">Guias Certificados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PROVÍNCIAS
+  ============================================================ -->
+  <section id="provincias" style="background:var(--noite); max-width:1400px; margin:0 auto; padding:7rem 5%;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Descobre</div>
+        <h2 class="section-title">As {{provincias|length}} Províncias<br/>de Angola</h2>
+      </div>
+      <p class="section-intro">
+        Cada província é um mundo próprio — paisagens únicas, culturas vibrantes e
+        histórias que moldaram um país inteiro.
+      </p>
+    </div>
+
+    <div class="provincias-grid">
+
+      {% for p in provincias %}
+
+        <a href="{% url 'provincia_detalhe' p.id %}" class="prov-card fade-up">
+          <img class="prov-img" src="{% if p.foto_capa %}{{p.foto_capa.url}}{% endif %}" alt="{{p.nome}}" />
+          <div class="prov-overlay">
+            <div class="prov-cat"></div>
+            <div class="prov-nome">{{p.nome}}</div>
+            <div class="prov-info"> {{p.num_municipios|default:"__"}} municípios · {{p.populacao|default:"__"}} habitantes</div>
+          </div>
+          <div class="prov-arrow">
+            <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </a>
+
+      {% endfor %}
+
+      <a href="{% url 'provincias' %}" class="btn-primary" style="grid-column: 1/-1; width:fit-content; margin:1rem auto 0; display:block; text-align:center;">
+        Ver Todas as Províncias →
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURE — DESTAQUE EDITORIAL
+  ============================================================ -->
+  <div class="feature-section">
+    <div class="feature-img">
+      <img src="https://images.unsplash.com/photo-1569163139394-de4e5f43e5ca?w=900&auto=format&fit=crop" alt="Quedas de Kalandula" />
+      <span class="feature-badge">Destaque do Mês</span>
+    </div>
+    <div class="feature-content">
+      <div class="section-label">Maravilha Natural</div>
+      <p class="feature-quote">As Quedas de Kalandula — onde a água abraça a eternidade</p>
+      <p class="feature-body">
+        Com mais de 105 metros de altura e 400 metros de largura, as Quedas de Kalandula
+        no rio Lucala são umas das maiores cataratas de África. Uma experiência que transforma
+        quem a presencia.
+      </p>
+      <ul class="feature-list">
+        <li>Localizada na Província de Malanje</li>
+        <li>Acesso por estrada alcatroada</li>
+        <li>Parque Nacional circundante</li>
+        <li>Melhor época: Março a Maio</li>
+      </ul>
+      <a href="#" class="btn-primary">Descobrir Este Destino</a>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PONTOS TURÍSTICOS
+  ============================================================ -->
+  <section id="pontos" class="pontos-section" style="max-width:1400px; margin:0 auto; padding:7rem 5%;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Pontos Turísticos</div>
+        <h2 class="section-title">Destinos<br/>Imperdíveis</h2>
+      </div>
+      <a href="{% url 'ponto_turistico' %}" class="btn-ghost" style="flex-shrink:0;">Ver Todos</a>
+    </div>
+
+    <div class="pontos-grid">
+
+      {% for p in pontos_toristicos %}
+
+        <div class="ponto-card fade-up">
+          <img class="ponto-img" src="{{p.foto_principal.url}}" alt="{{p.nome}}" />
+          <div class="ponto-body">
+            <div class="ponto-cat">
+              {% for c in p.categorias.all %}{{c.nome}}-{% endfor %}
+            </div>
+            <div class="ponto-nome">{{p.nome}}</div>
+            <p class="ponto-desc">{{p.descricao|slice:50}}{% if p.descricao|length > 50 %}...{% endif %}</p>
+            <div class="ponto-meta">
+              <div class="ponto-loc">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{p.provincia.nome}}
+              </div>
+              <div class="ponto-rating">⭐ {{p.total_avaliacoes}}</div>
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+      
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GASTRONOMIA
+  ============================================================ -->
+  {% if prato_destaque %}
+    <section id="gastronomia" class="gastro-section">
+      <div class="gastro-inner">
+        <div class="gastro-text">
+          <div class="section-label">Saber de Angola</div>
+          <h2 class="section-title">Gastronomia<br/>com Alma</h2>
+          <p>{{prato_destaque.descricao}}</p>
+          <a href="{% url 'gastronomia_lista' %}" class="btn-light">Explorar Pratos Típicos</a>
+        </div>
+        <div class="gastro-mosaic">
+          <div class="gastro-img">
+            <img src="{{prato_destaque.foto.url}}" alt="Gastronomia Angolana" />
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- ============================================================
+       HOTÉIS
+  ============================================================ -->
+  <section id="hoteis" class="hoteis-section" style="max-width:1400px; margin:0 auto; padding:7rem 5%;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Onde Ficar</div>
+        <h2 class="section-title">Alojamentos<br/>de Excelência</h2>
+      </div>
+      <a href="{% url 'alojamento_lista' %}" class="btn-ghost" style="flex-shrink:0;">Ver Todos</a>
+    </div>
+
+    <div class="hoteis-scroll">
+
+      {% for h in hoteis %}
+        <div class="hotel-card fade-up">
+          {% if h.foto %}
+            <img src="{{h.foto.url}}" alt="{{h.nome}}" />
+          {% endif %}
+          <div class="hotel-info">
+            <div class="hotel-stars">
+    
+              <span class="hotel-star">
+                {% if h.classificacao == '1' %}
+                  ★
+                {% elif h.classificacao == '2' %}
+                  ★★
+                {% elif h.classificacao == '3' %}
+                  ★★★
+                {% elif h.classificacao == '4' %}
+                  ★★★★
+                {% elif h.classificacao == '5'%}
+                  ★★★★★
+                {% endif %}
+              </span>
+
+            </div>
+
+            <div class="hotel-nome">{{h.nome}}</div>
+            <div class="hotel-loc">📍 {{h.empresa.municipio}}</div>
+            {% if h.preco_min_noite %}
+              <div class="hotel-preco">
+                <span class="valor" style="font-size: 10pt;"> Mínimo {{h.preco_min_noite}} </span>
+                <span class="noite">AOA / noite</span>
+              </div>
+            {% endif %}
+            {% if h.preco_max_noite %}
+              <div class="hotel-preco">
+                <span class="valor" style="font-size: 10pt;">Máximo {{h.preco_max_noite}}</span>
+                <span class="noite">AOA / noite</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GUIAS TURÍSTICOS
+  ============================================================ -->
+  <section id="guias" class="guias-section" style="max-width:1400px; margin:0 auto; padding:7rem 5%;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Conhece Angola com Quem a Vive</div>
+        <h2 class="section-title">Guias<br/>Certificados</h2>
+      </div>
+      <a href="{% url 'guia_turistico' %}" class="btn-ghost" style="flex-shrink:0;">Ver Todos</a>
+    </div>
+    <div class="guias-grid">
+      {% for g in guias %}
+        <div class="guia-card fade-up">
+          <img class="guia-avatar" src="{{g.foto.url}}" alt="João Manuel" />
+          <div class="guia-nome">{{g.usuario.nome}}</div>
+          <div class="guia-lang">{{g.idiomas}}</div>
+          <div class="guia-info">{{g.especializacoes}}</div>
+          <div class="guia-rating">⭐ {{g.media_avaliacao}} · {{g.total_excursoes}} excursões</div>
+        </div>
+      {% endfor %}
+      
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MAPA BANNER
+  ============================================================ -->
+  <div class="mapa-banner">
+    <div class="mapa-inner">
+      <div class="section-label" style="justify-content:center; color:rgba(255,255,255,0.7);">Explora com IA</div>
+      <h2 class="section-title" style="color:#fff; text-align:center; margin-bottom:1.5rem;">O Teu Assistente<br/>de Viagem Inteligente</h2>
+      <p>Faz perguntas, planeia roteiros e descobre Angola com o nosso assistente de IA treinado em dados reais de todas as 18 províncias.</p>
+      <a href="#" class="btn-light">Conversar com o Assistente IA →</a>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       NEWSLETTER
+  ============================================================ -->
+  <section class="newsletter-section">
+    <div class="newsletter-inner">
+      <div class="section-label" style="justify-content:center;">Fica Ligado</div>
+      <h2 class="section-title">Novidades,<br/>Destinos & Promoções</h2>
+      <p class="newsletter-desc">
+        Recebe curadoria semanal dos melhores destinos, eventos e experiências
+        únicas em Angola — directamente na tua caixa de correio.
+      </p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="O teu endereço de e-mail" />
+        <button type="button">Subscrever</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Slideshow
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dot');
+    let current = 0;
+    let timer;
+
+    function goSlide(n) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = n;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      clearInterval(timer);
+      timer = setInterval(nextSlide, 6000);
+    }
+
+    function nextSlide() {
+      goSlide((current + 1) % slides.length);
+    }
+
+    timer = setInterval(nextSlide, 6000);
+  </script>
+
+{% endblock content %}

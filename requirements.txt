@@ -1,0 +1,70 @@
+# ============================================================
+# EXPLORA REGIÃO AI — Requirements
+# ============================================================
+
+# Django Core
+Django
+djangorestframework
+django-cors-headers
+
+# Banco de Dados
+psycopg2-binary
+django-extensions
+
+#ia
+anthropic
+# GIS / GeoDjango
+#GDAL==3.8.4
+django-leaflet
+
+# Autenticação & Segurança
+djangorestframework-simplejwt
+django-allauth
+django-otp
+argon2-cffi
+
+# Cache & Fila
+redis
+django-redis
+celery
+django-celery-beat
+django-celery-results
+
+# Imagens & Media
+Pillow==10.4.0
+django-storages==1.14.4
+boto3==1.35.0
+
+# Slugs & Utilitários
+django-autoslug
+django-model-utils
+python-slugify
+phonenumbers
+
+# Configuração
+python-decouple
+dj-database-url
+
+# Filtros & Pesquisa
+django-filter
+django-haystack
+elasticsearch
+
+# Tradução & i18n
+django-modeltranslation
+Babel
+
+# SEO
+django-meta
+
+# Logs & Monitoramento
+django-auditlog
+sentry-sdk
+
+# Documentação da API
+drf-spectacular
+
+# Testes
+pytest
+pytest-django
+factory-boy

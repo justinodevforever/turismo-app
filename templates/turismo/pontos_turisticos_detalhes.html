@@ -1,0 +1,478 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ponto_turistico.nome}}— Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+  <style>
+  
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--corpo); background: var(--noite); color: var(--branco); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,17,23,0.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+    .nav-logo .marca { font-family: var(--stamp); font-size: 1.6rem; letter-spacing: 3px; color: var(--branco); }
+    .nav-logo .sub { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--ocre); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(247,243,238,0.75); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ocre); }
+    .nav-cta { background: var(--terra); color: var(--branco); padding: 0.6rem 1.4rem; border-radius: 2px; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--ocre); color: var(--noite); }
+
+    /* HERO */
+    .hero-detalhe {
+      position: relative; height: 85vh; min-height: 600px;
+      display: flex; align-items: flex-end; padding-bottom: 5rem;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('{{ponto_turistico.foto_principal.url}}') center/cover;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(13,17,23,0.2) 0%, rgba(13,17,23,0.0) 30%, rgba(13,17,23,0.7) 70%, rgba(13,17,23,0.97) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 0 5%; width: 100%; max-width: 1400px; margin: 0 auto; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(247,243,238,0.5); margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--ocre); text-decoration: none; }
+    .breadcrumb span { color: rgba(247,243,238,0.3); }
+    .hero-cats { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .cat-badge { background: var(--terra); color: var(--branco); padding: 0.3rem 0.9rem; font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; border-radius: 2px; }
+    .hero-title { font-family: var(--display); font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; color: var(--branco); line-height: 1.05; margin-bottom: 1rem; }
+    .hero-title em { font-style: italic; color: var(--ocre); }
+    .hero-meta-row { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+    .hero-meta-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: rgba(247,243,238,0.65); }
+    .hero-rating { display: flex; align-items: center; gap: 0.4rem; }
+    .stars { color: var(--ocre); letter-spacing: 2px; }
+    .rating-num { font-weight: 600; color: var(--ocre); }
+    .rating-count { color: var(--cinza); font-size: 0.75rem; }
+
+    /* LAYOUT PRINCIPAL */
+    .main-layout {
+      max-width: 1400px; margin: 0 auto; padding: 4rem 5%;
+      display: grid; grid-template-columns: 1fr 360px; gap: 4rem; align-items: start;
+    }
+
+    /* GALERIA */
+    .galeria { margin-bottom: 3rem; }
+    .galeria-grid {
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 260px 180px; gap: 0.75rem;
+    }
+    .galeria-img { border-radius: 4px; overflow: hidden; }
+    .galeria-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; filter: brightness(0.9); }
+    .galeria-img:hover img { transform: scale(1.05); filter: brightness(1); }
+    .galeria-img:first-child { grid-row: 1 / 3; }
+
+    /* CONTEÚDO */
+    .section-label {
+      font-size: 0.6rem; letter-spacing: 5px; text-transform: uppercase; color: var(--terra);
+      margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .section-label::after { content: ''; display: block; width: 40px; height: 1px; background: var(--terra); }
+    h2.content-title { font-family: var(--display); font-size: 1.8rem; font-weight: 700; color: var(--branco); margin-bottom: 1.2rem; }
+    .content-body p { font-size: 0.92rem; line-height: 1.85; color: var(--cinza); margin-bottom: 1.2rem; }
+    .content-body p:last-child { margin-bottom: 0; }
+
+    .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.06); margin: 2.5rem 0; }
+
+    /* INFOS GRID */
+    .infos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .info-item { background: var(--escuro); border-radius: 4px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.06); }
+    .info-label { font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: var(--cinza); margin-bottom: 0.4rem; }
+    .info-value { font-size: 0.95rem; color: var(--branco); font-weight: 500; }
+    .info-value.highlight { color: var(--ocre); font-family: var(--stamp); font-size: 1.3rem; }
+
+    /* HORÁRIOS */
+    .horario-table { width: 100%; }
+    .horario-row { display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-dia { color: var(--cinza); }
+    .horario-hora { color: var(--branco); font-weight: 500; }
+    .horario-hora.fechado { color: rgba(194,91,42,0.7); }
+
+    /* PONTOS PRÓXIMOS */
+    .proximos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .proximo-card { background: var(--escuro); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: border-color 0.3s; }
+    .proximo-card:hover { border-color: var(--terra); }
+    .proximo-img { width: 100%; height: 110px; object-fit: cover; display: block; }
+    .proximo-body { padding: 0.8rem 1rem; }
+    .proximo-nome { font-family: var(--display); font-size: 0.9rem; font-weight: 700; color: var(--branco); margin-bottom: 0.2rem; }
+    .proximo-cat { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--terra); }
+
+    /* SIDEBAR */
+    .sidebar { position: sticky; top: 100px; }
+    .sidebar-card { background: var(--escuro); border-radius: 4px; padding: 2rem; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 1.5rem; }
+    .sidebar-title { font-family: var(--display); font-size: 1.2rem; font-weight: 700; color: var(--branco); margin-bottom: 1.5rem; }
+    .btn-primary { background: var(--terra); color: var(--branco); padding: 1rem 2rem; border: none; border-radius: 2px; font-family: var(--corpo); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; cursor: pointer; width: 100%; display: block; text-align: center; text-decoration: none; transition: background 0.25s; margin-bottom: 0.8rem; }
+    .btn-primary:hover { background: var(--ocre); color: var(--noite); }
+    .btn-ghost { border: 1px solid rgba(255,255,255,0.15); color: var(--branco); padding: 0.9rem 2rem; border-radius: 2px; font-family: var(--corpo); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; width: 100%; display: block; text-align: center; text-decoration: none; transition: border-color 0.25s, background 0.25s; background: transparent; }
+    .btn-ghost:hover { border-color: var(--ocre); background: rgba(232,160,74,0.08); }
+
+    /* COMO CHEGAR */
+    .mapa-placeholder { background: var(--noite); border-radius: 4px; height: 200px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 1.2rem; flex-direction: column; gap: 0.75rem; }
+    .mapa-icon { font-size: 2rem; }
+    .mapa-text { font-size: 0.75rem; color: var(--cinza); letter-spacing: 1px; }
+
+    /* CONTACTO */
+    .contacto-list { display: flex; flex-direction: column; gap: 0.9rem; }
+    .contacto-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.83rem; color: var(--cinza); }
+    .contacto-icon { width: 32px; height: 32px; background: rgba(255,255,255,0.04); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+
+    /* AVALIAÇÕES */
+    .avg-box { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .avg-num { font-family: var(--stamp); font-size: 4rem; color: var(--ocre); line-height: 1; }
+    .avg-detail { flex: 1; }
+    .avg-stars { font-size: 1.2rem; color: var(--ocre); margin-bottom: 0.3rem; }
+    .avg-total { font-size: 0.75rem; color: var(--cinza); }
+    .bar-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; font-size: 0.72rem; color: var(--cinza); }
+    .bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .bar-fill { height: 100%; background: var(--ocre); border-radius: 2px; }
+    .bar-label { width: 20px; text-align: right; }
+
+    .review-card { padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .review-card:last-child { border-bottom: none; }
+    .review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+    .review-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(194,91,42,0.3); }
+    .review-author { font-size: 0.88rem; font-weight: 600; color: var(--branco); }
+    .review-date { font-size: 0.7rem; color: var(--cinza); }
+    .review-stars { color: var(--ocre); font-size: 0.75rem; }
+    .review-text { font-size: 0.83rem; line-height: 1.7; color: var(--cinza); }
+
+    footer { background: #070B10; padding: 3rem 5%; border-top: 1px solid rgba(255,255,255,0.04); text-align: center; }
+    .footer-bottom { font-size: 0.72rem; color: rgba(140,155,176,0.5); display: flex; justify-content: space-between; align-items: center; }
+
+    @media (max-width: 1024px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .infos-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .galeria-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .galeria-img:first-child { grid-row: auto; }
+      .galeria-img { height: 200px; }
+      .galeria-img img { height: 200px; }
+      .infos-grid { grid-template-columns: 1fr; }
+      .proximos-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- HERO -->
+  <div class="hero-detalhe">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="breadcrumb">
+        <a href="/">Início</a>
+        <span>/</span>
+        <a href="index.html#pontos">Destinos</a>
+        <span>/</span>
+        <span>{{ponto_turistico.nome}}</span>
+      </div>
+      <div class="hero-cats">
+
+        {% for c in ponto_turistico.categorias.all %}
+          <span class="cat-badge">{{c.nome}}</span>
+        {% endfor %}
+        
+      </div>
+      <h1 class="hero-title"><em>{{ponto_turistico.nome}}</em></h1>
+      <div class="hero-meta-row">
+        <div class="hero-meta-item">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ponto_turistico.municipio}}
+        </div>
+        <div class="hero-rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-num">{{ponto_turistico.media_avaliacao}}</span>
+          <span class="rating-count">({{ponto_turistico.total_avaliacoes}} avaliações)</span>
+        </div>
+        <div class="hero-meta-item">👁 {{ponto_turistico.total_visualizacoes}} visualizações</div>
+        <div class="hero-meta-item">
+          {% if ponto_turistico.entrada_gratuita %}✅ Entrada gratuita {% else %} {{ponto_turistico.preco_entrada}} {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="main-layout">
+    <div class="main-content">
+
+      <!-- GALERIA -->
+      <div class="galeria">
+        <div class="galeria-grid">
+
+          {% for m in ponto_turistico.midias.all %}
+            <div class="galeria-img">
+              <img src="{{m.ficheiro.url}}" alt="{{m.titulo}}" />
+            </div>
+          {%empty%}
+            <h1> Sem Galeria Para Este Ponto Turístico </h1>
+          {% endfor %}
+         
+        </div>
+      </div>
+
+      <!-- SOBRE -->
+      <div class="section-label">Sobre o Destino</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.descricao}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- DADOS PRÁTICOS -->
+      <div class="section-label">Dados Práticos</div>
+      <div class="infos-grid">
+        
+        <div class="info-item">
+          <div class="info-label">Entrada</div>
+          <div class="info-value highlight">
+            {% if ponto_turistico.entrada_gratuita %}Gratuita {% else %} {{ponto_turistico.preco_entrada}} AO {% endif %}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Melhor Época</div>
+          <div class="info-value">{{ponto_turistico.melhor_epoca}}</div>
+        </div>
+        
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- HORÁRIOS -->
+      <div class="section-label">Horário de Visita</div>
+      <h2 class="content-title" style="font-size:1.3rem; margin-bottom:1.5rem;">Dias e horas de Visita</h2>
+      <div class="horario-table">
+
+        {% for dia, hora in ponto_turistico.horario_funcionamento.items %}
+          <div class="horario-row"><span class="horario-dia">
+            {{dia}}</span><span class="horario-hora">{{hora}}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- HISTÓRIA -->
+      <div class="section-label">História & Contexto</div>
+      
+      <div class="content-body">
+        <p>{{ponto_turistico.historia|default:"Aguardando por História e Contexto..."}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- AVALIAÇÕES -->
+      <div class="section-label">Avaliações</div>
+      <h2 class="content-title" style="font-size:1.3rem; margin-bottom:1.5rem;">Suas Avaliações</h2>
+      
+      <div class="avg-box">
+        <div class="avg-num">{{ponto_turistico.media_avaliacao}}</div>
+        <div class="avg-detail">
+          <div class="avg-stars">★★★★★</div>
+          <div class="avg-total">{{ponto_turistico.total_avaliacoes}} avaliações</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Planear Visita</div>
+        <a href="guias.html" class="btn-primary">Contratar Guia Local</a>
+        <a href="#" class="btn-ghost">Guardar nos Favoritos ♡</a>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">Como Chegar</div>
+        <div class="mapa-placeholder">
+          <div style="width: 100%; height: 100%;" id="map">🗺</div>
+          {% comment %} <div class="mapa-text">Malanje → Kalandula · 65 km</div> {% endcomment %}
+        </div>
+        
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">Contacto</div>
+        <div class="contacto-list">
+          <div class="contacto-item">
+            <div class="contacto-icon">📞</div>
+            +244 {{ponto_turistico.telefone|default:"Aguardando por telefone..."}}
+          </div>
+          <div class="contacto-item">
+            <div class="contacto-icon">🌐</div>
+            Gestão: {{ponto_turistico.responsavel}}
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+
+<script>
+    {% comment %} // 1. Criar mapa
+    var map = L.map('map').setView([-8.8383, 13.2344], 10);
+
+    // 2. OpenStreetMap layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // 3. Pegar dados do Django
+    var pontos = [
+        {% for l in lugares %}
+        [{{ l.latitude }}, {{ l.longitude }}],
+        {% endfor %}
+    ];
+
+    // 4. Criar marcadores
+    pontos.forEach(function(p, i) {
+        L.marker(p)
+            .addTo(map)
+            .bindPopup("Lugar " + (i + 1));
+    });
+
+    // 5. 🔥 CRIAR ROTA (linha entre pontos)
+    var rota = L.polyline(pontos, {
+        color: 'blue',
+        weight: 4,
+        opacity: 0.8
+    }).addTo(map);
+
+    // 6. Ajustar zoom automaticamente
+    map.fitBounds(rota.getBounds()); {% endcomment %}
+    const angolaBounds = [
+        [-18.1, 11.5], // Sudoeste
+        [-4.2, 24.2]   // Nordeste
+    ];
+
+    // 1. pegar coordenadas do Django
+    var lat = {{ ponto_turistico.latitude }};
+    var lng = {{ ponto_turistico.longitude }};
+
+    // 2. criar mapa centrado no lugar
+    var map = L.map('map').setView([lat, lng], 15);
+
+    // 3. camada do mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // 4. marcador do lugar
+    L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup("<b>{{ ponto_turistico.nome }}</b>")
+        .openPopup();
+
+    
+    // Verifica se o navegador suporta geolocalização
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+          if(position.coords.accuracy <= 100){
+
+              const origem = L.latLng(
+                position.coords.latitude,
+                position.coords.longitude
+            );
+            console.log("Precisão:", position.coords.accuracy);
+
+            // Marcador da localização do usuário
+            L.marker(origem).addTo(map)
+                .bindPopup("Você está aqui.")
+                .openPopup();
+
+            // Criar rota
+            L.Routing.control({
+                waypoints: [
+                    origem,
+                    L.latLng(lat, lng)
+                ],
+                routeWhileDragging: true
+            }).addTo(map);
+
+          }else{
+
+              alert("Clique no mapa para informar sua localização.");
+
+              let marcadorOrigem = null;
+              let controleRota = null;
+
+              // Quando clicar no mapa
+              map.on('click', function(e) {
+
+                  const origem = e.latlng;
+
+                  // Remove marcador anterior
+                  if (marcadorOrigem) {
+                      map.removeLayer(marcadorOrigem);
+                  }
+
+                  // Adiciona novo marcador
+                  marcadorOrigem = L.marker(origem)
+                      .bindPopup("Você está aqui.")
+                      .addTo(map)
+
+                  // Remove rota anterior
+                  if (controleRota) {
+                      map.removeControl(controleRota);
+                  }
+
+                  // Cria nova rota
+                  controleRota = L.Routing.control({
+                      waypoints: [
+                          origem,
+                          L.latLng(lat, lng)
+                      ],
+                      routeWhileDragging: true
+                  }).addTo(map);
+
+              });
+
+          }
+
+        }, function(error) {
+            alert("Não foi possível obter sua localização.");
+            console.log(error);
+        });
+
+    } else {
+        alert("Seu navegador não suporta Geolocalização.");
+    }
+
+
+    
+</script>
+</body>
+</html>
+{% endblock  %}

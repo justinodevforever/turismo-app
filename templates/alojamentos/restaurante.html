@@ -1,0 +1,263 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+  <!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurantes — Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root { --terra:#C25B2A; --ocre:#E8A04A; --noite:#0D1117; --escuro:#1A2130; --branco:#F7F3EE; --cinza:#8C9BB0; --verde:#2D6A4F; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:var(--noite); color:var(--branco); overflow-x:hidden; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.25rem 5%; display:flex; align-items:center; justify-content:space-between; background:rgba(13,17,23,0.95); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,0.05); }
+    .nav-logo { display:flex; flex-direction:column; line-height:1; text-decoration:none; }
+    .nav-logo .marca { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:3px; color:var(--branco); }
+    .nav-logo .sub { font-size:0.6rem; letter-spacing:4px; text-transform:uppercase; color:var(--ocre); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { text-decoration:none; font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:rgba(247,243,238,0.75); transition:color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--ocre); }
+    .nav-cta { background:var(--terra); color:var(--branco); padding:0.6rem 1.4rem; border-radius:2px; font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:background 0.2s; }
+    .nav-cta:hover { background:var(--ocre); color:var(--noite); }
+
+    /* HERO */
+    .page-hero { position:relative; padding:13rem 5% 5rem; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&auto=format&fit=crop') center/cover; }
+    .hero-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(13,17,23,0.95) 40%,rgba(194,91,42,0.3) 100%); }
+    .hero-inner { position:relative; z-index:1; }
+    .hero-eyebrow { font-size:0.62rem; letter-spacing:5px; text-transform:uppercase; color:var(--ocre); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+    .hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--ocre); }
+    h1 { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,6vw,5rem); font-weight:900; color:var(--branco); line-height:1.05; margin-bottom:1.2rem; }
+    h1 em { font-style:italic; color:var(--ocre); }
+    .hero-desc { font-size:0.95rem; line-height:1.75; color:rgba(247,243,238,0.65); max-width:500px; margin-bottom:2rem; }
+    .hero-stats { display:flex; gap:3rem; }
+    .h-stat { }
+    .h-stat-num { font-family:'Bebas Neue',sans-serif; font-size:2.5rem; color:var(--ocre); line-height:1; }
+    .h-stat-label { font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); }
+
+    /* FILTROS BAR */
+    .filtros-bar { background:var(--escuro); padding:1.5rem 5%; border-bottom:1px solid rgba(255,255,255,0.05); position:sticky; top:72px; z-index:50; }
+    .filtros-inner { max-width:1400px; margin:0 auto; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
+    .chip { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--cinza); padding:0.45rem 1.1rem; border-radius:2px; font-size:0.72rem; letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
+    .chip:hover, .chip.active { background:var(--terra); border-color:var(--terra); color:var(--branco); }
+    .chip-veg { border-color:rgba(45,106,79,0.4); color:#5cb88a; }
+    .chip-veg.active { background:var(--verde); border-color:var(--verde); }
+    .sep { width:1px; height:24px; background:rgba(255,255,255,0.1); }
+    .busca-group { display:flex; flex-direction:column; padding:1rem 1.5rem; background:rgba(255,255,255,0.03); border-right:1px solid rgba(255,255,255,0.08); gap:0.2rem; }
+    .busca-group label { font-size:0.56rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); }
+    .busca-group select, .busca-group input { background:transparent; border:none; outline:none; font-size:0.9rem; font-family:'Inter',sans-serif; color:var(--branco); }
+    .busca-group select option { background:var(--escuro); }
+    .search-input { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--branco); padding:0.55rem 1rem; border-radius:2px; font-size:0.8rem; outline:none; font-family:'Inter',sans-serif; width:220px; margin-left:auto; }
+    .search-input::placeholder { color:var(--cinza); }
+    .busca-btn { background:var(--terra); border:none; padding:1rem 2rem; color:var(--branco); font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; font-weight:600; cursor:pointer; transition:background 0.25s; white-space:nowrap; }
+    .busca-btn:hover { background:var(--ocre); color:var(--noite); }
+
+    /* MAPA + LISTA SPLIT */
+    .split-view { max-width:1400px; margin:0 auto; padding:3rem 5%; display:grid; grid-template-columns:1fr 380px; gap:3rem; align-items:start; }
+
+    /* LISTA */
+    .lista-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.8rem; }
+    .count { font-size:0.82rem; color:var(--cinza); }
+    .count strong { color:var(--branco); }
+    .sort-select { background:var(--escuro); border:1px solid rgba(255,255,255,0.1); color:var(--branco); padding:0.45rem 0.8rem; border-radius:2px; font-size:0.75rem; font-family:'Inter',sans-serif; outline:none; }
+
+    .rest-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .rest-card { background:var(--escuro); border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.06); cursor:pointer; transition:border-color 0.3s,transform 0.3s; }
+    .rest-card:hover { border-color:var(--terra); transform:translateY(-3px); }
+    .rest-img { position:relative; }
+    .rest-img img { width:100%; height:180px; object-fit:cover; display:block; transition:transform 0.5s; }
+    .rest-card:hover .rest-img img { transform:scale(1.05); }
+    .rest-tipo-badge { position:absolute; bottom:0.8rem; left:0.8rem; background:rgba(13,17,23,0.85); color:var(--branco); font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; padding:0.25rem 0.6rem; border-radius:2px; }
+    .rest-entrega { position:absolute; top:0.8rem; right:0.8rem; background:var(--verde); color:#fff; font-size:0.58rem; letter-spacing:1px; text-transform:uppercase; padding:0.2rem 0.5rem; border-radius:2px; }
+    .rest-body { padding:1.2rem; }
+    .rest-cozinha { font-size:0.58rem; letter-spacing:3px; text-transform:uppercase; color:var(--terra); margin-bottom:0.3rem; }
+    .rest-nome { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--branco); margin-bottom:0.3rem; }
+    .rest-loc { display:flex; align-items:center; gap:0.4rem; font-size:0.72rem; color:var(--cinza); margin-bottom:0.6rem; }
+    .rest-tags { display:flex; gap:0.3rem; flex-wrap:wrap; margin-bottom:0.8rem; }
+    .rtag { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); color:var(--cinza); padding:0.2rem 0.55rem; border-radius:2px; font-size:0.62rem; }
+    .rest-footer { display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.05); padding-top:0.8rem; }
+    .rest-rating { display:flex; align-items:center; gap:0.4rem; }
+    .rating-dot { background:var(--terra); color:var(--branco); font-weight:700; padding:0.2rem 0.5rem; border-radius:2px; font-size:0.78rem; }
+    .rating-info { font-size:0.68rem; color:var(--cinza); }
+    .rest-preco { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:var(--ocre); }
+    .btn-reserva { background:transparent; border:1px solid rgba(194,91,42,0.4); color:var(--terra); padding:0.4rem 0.9rem; border-radius:2px; font-size:0.65rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; }
+    .btn-reserva:hover { background:var(--terra); color:var(--branco); }
+
+    /* SIDEBAR MAPA + DESTAQUES */
+    .sidebar-rest { position:sticky; top:120px; }
+    .mapa-card { background:var(--escuro); border-radius:4px; border:1px solid rgba(255,255,255,0.06); margin-bottom:1.5rem; overflow:hidden; }
+    .mapa-header { padding:1.2rem 1.5rem; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); }
+    .mapa-placeholder { height:260px; background:var(--noite); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:0.75rem; }
+    .mapa-placeholder .icon { font-size:2.5rem; }
+    .mapa-placeholder p { font-size:0.75rem; color:var(--cinza); }
+    .mapa-footer { padding:1rem 1.5rem; }
+    .btn-mapa { background:var(--terra); color:var(--branco); border:none; padding:0.7rem; border-radius:2px; font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; cursor:pointer; width:100%; transition:background 0.25s; }
+    .btn-mapa:hover { background:var(--ocre); color:var(--noite); }
+
+    .top-card { background:var(--escuro); border-radius:4px; border:1px solid rgba(255,255,255,0.06); padding:1.5rem; }
+    .top-title { font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:var(--cinza); margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .top-item { display:flex; align-items:center; gap:1rem; padding:0.8rem 0; border-bottom:1px solid rgba(255,255,255,0.04); cursor:pointer; }
+    .top-item:last-child { border-bottom:none; }
+    .top-rank { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:var(--terra); opacity:0.6; line-height:1; width:24px; flex-shrink:0; }
+    .top-img { width:48px; height:48px; border-radius:3px; object-fit:cover; flex-shrink:0; }
+    .top-info { flex:1; }
+    .top-nome { font-size:0.85rem; font-weight:600; color:var(--branco); margin-bottom:0.2rem; }
+    .top-sub { font-size:0.7rem; color:var(--cinza); }
+    .top-rating { font-size:0.8rem; color:var(--ocre); font-weight:700; }
+
+    footer { background:#070B10; padding:3rem 5%; border-top:1px solid rgba(255,255,255,0.04); }
+    .footer-bottom { font-size:0.72rem; color:rgba(140,155,176,0.5); display:flex; justify-content:space-between; align-items:center; max-width:1400px; margin:0 auto; }
+
+    @media (max-width:1024px) { .split-view { grid-template-columns:1fr; } .sidebar-rest { position:static; } }
+    @media (max-width:768px) { .nav-links { display:none; } .rest-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Mesa Angolana</div>
+      <h1>Onde <em>Comer</em><br/>em Angola</h1>
+      <p class="hero-desc">De tascas tradicionais com muamba autêntica a restaurantes de cozinha contemporânea — encontra a mesa certa para cada ocasião.</p>
+      <div class="hero-stats">
+        <div class="h-stat"><div class="h-stat-num">
+          {{restaurantes|length}}</div><div class="h-stat-label">Restaurantes</div></div>
+        <div class="h-stat"><div class="h-stat-num">{{total_provincia}}</div><div class="h-stat-label">Províncias</div></div>
+        <div class="h-stat"><div class="h-stat-num">8+</div><div class="h-stat-label">Tipos de Cozinha</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-bar">
+    <form method="get" class="filtros-inner">
+      <div class="busca-group">
+        <label for="tipo_cozinha">Tipo de Cozinha</label>
+        <select name="tipo_cozinha" id="tipo_cozinha">
+          <option value="">Todos</option>
+          {% for v, t in tipos %}
+            <option value="{{v}}">{{t}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="busca-group">
+        <input class="search-input" type="text" name="search" placeholder="🔍  Pesquisar restaurante..." />
+      </div>
+
+      <button type="submit" class="busca-btn">Pesquisar</button>
+    </form>
+  </div>
+
+  <div class="split-view">
+    <div>
+      <form method="get" class="lista-header">
+        <div class="count">A mostrar <strong>48 restaurantes</strong> em Angola</div>
+        <select class="sort-select" name="order_by" onchange="this.form.submit()">
+          <option value="todos">Todos</option>
+          <option value="$" {% if order_by == '$' %}selected{% endif %}>Preço: Económico</option>
+          <option value="$$$" {% if order_by == '$$$' %}selected{% endif %}>Preço: Premium</option>
+          <option value="$$$$" {% if order_by == '$$$$' %}selected{% endif %}>Preço: Luxo</option>
+        </select>
+      </form>
+
+      <div class="rest-grid">
+
+        {% for r in restaurantes %}
+
+          <div class="rest-card">
+            <div class="rest-img">
+              {% if r.foto %}
+                <img src="{{r.foto.url}}" alt="Tasca do Muamba" />
+              {% endif %}
+              <span class="rest-tipo-badge">{{r.tipo_cozinha}}</span>
+            </div>
+            <div class="rest-body">
+              <div class="rest-cozinha">{{r.tipo_cozinha}}</div>
+              <div class="rest-nome">{{r.nome}}</div>
+              <div class="rest-loc">📍 {{r.endereco|default:"informa endereço"}}</div>
+              <div class="rest-tags">{{r.especialidades}}</div>
+              <div class="rest-footer">
+                <div style="display:flex;align-items:center;gap:0.7rem;">
+                  <span class="rest-preco">{{r.faixa_preco}} . {{r.get_faixa_preco_display}} </span>
+                  <button class="btn-reserva">Reservar</button></div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar-rest">
+      <div class="mapa-card">
+        <div class="mapa-header">Mapa de Restaurantes</div>
+        <div class="mapa-placeholder">
+          <div class="icon">🗺</div>
+          <p>Ver restaurantes no mapa</p>
+        </div>
+        <div class="mapa-footer">
+          <button class="btn-mapa">Abrir Mapa Completo</button>
+        </div>
+      </div>
+
+      <div class="top-card">
+        <div class="top-title">Top 5 desta Semana</div>
+
+        {% for m in menus %}
+          <div class="top-item">
+            <span class="top-rank">{{forloop.counter}}</span>
+            {% if m.foto %}
+              <img class="top-img" src="{{m.foto.url}}" alt="Savana" />
+            {% endif %}
+            <div class="top-info">
+              <div class="top-nome">{{m.nome}}</div>
+              <div class="top-nome">{{m.restaurante.nome}}</div>
+              <div class="top-sub">{{m.municipio}} · {{m.get_categoria_display}}</div>
+              {% if m.vegetariano %}
+                <span class="top-rating">Vegetariano</span>
+              {% endif %}
+              {% if m.vegano %}
+                | <span class="top-rating">Vegano</span>
+              {% endif %}
+              {% if m.sem_gluten %}
+                | <span class="top-rating">Sem Gluten</span>
+              {% endif %}
+              {% if m.picante %}
+                | <span class="top-rating">Picante</span>
+              {% endif %}
+              {% if m.mais_pedido %}
+                | <span class="top-rating">Mais Pedido</span>
+              {% endif %}
+            
+            </div>
+            
+          </div>
+        {% endfor %}
+        
+      </div>
+    </aside>
+  </div>
+
+
+  <script>
+    document.querySelectorAll('.chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(x => { if (!x.classList.contains('chip-veg')) x.classList.remove('active'); });
+        c.classList.toggle('active');
+      });
+    });
+  </script>
+</body>
+</html>
+{% endblock  %}

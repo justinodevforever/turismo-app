@@ -1,0 +1,263 @@
+{% extends "pagebase/base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pontos Turísticos — Explora Angola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+    body{font-family:var(--corpo);background:var(--noite);color:var(--branco);overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.05);}
+    .nav-logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+    .nav-logo .marca{font-family:var(--stamp);font-size:1.6rem;letter-spacing:3px;color:var(--branco);}
+    .nav-logo .sub{font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--ocre);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{text-decoration:none;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(247,243,238,0.75);transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--ocre);}
+    .nav-cta{background:var(--terra);color:var(--branco)!important;padding:0.6rem 1.4rem;border-radius:2px;font-size:0.75rem!important;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background 0.2s;}
+    .nav-cta:hover{background:var(--ocre)!important;color:var(--noite)!important;}
+
+    /* HERO */
+    .page-hero{padding:10rem 5% 5rem;background:var(--escuro);position:relative;overflow:hidden;}
+    .page-hero::before{content:'DESTINOS';position:absolute;font-family:var(--stamp);font-size:20vw;color:rgba(255,255,255,0.02);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+    .page-hero-inner{max-width:1400px;margin:0 auto;position:relative;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--cinza);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--cinza);text-decoration:none;transition:color 0.2s;}
+    .breadcrumb a:hover{color:var(--ocre);}
+    .breadcrumb span{color:var(--terra);}
+    .page-eyebrow{font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--terra);display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;}
+    .page-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--terra);}
+    .page-title{font-family:var(--display);font-size:clamp(2.5rem,5vw,4rem);font-weight:900;line-height:1.05;color:var(--branco);margin-bottom:1rem;}
+    .page-title em{font-style:italic;color:var(--ocre);}
+    .page-desc{font-size:0.95rem;line-height:1.75;color:var(--cinza);}
+
+    /* CATEGORIAS RÁPIDAS */
+    .cat-pills{display:flex;gap:0.75rem;flex-wrap:wrap;align-self:end;}
+    .cat-pill{display:flex;flex-direction:column;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:3px;padding:1rem 1.2rem;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+    .cat-pill:hover,.cat-pill.active{background:rgba(194,91,42,0.15);border-color:var(--terra);}
+    .cat-pill .icon{font-size:1.4rem;}
+    .cat-pill .label{font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--cinza);}
+    .cat-pill.active .label{color:var(--terra);}
+
+    /* FILTROS & BUSCA */
+    .filters-section{background:var(--escuro);border-bottom:1px solid rgba(255,255,255,0.05);padding:1.5rem 5%;position:sticky;top:72px;z-index:50;}
+    .filters-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .search-input-wrap{position:relative;flex:1;min-width:200px;}
+    .search-input-wrap svg{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--cinza);width:16px;height:16px;}
+    .search-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:2px;padding:0.7rem 1rem 0.7rem 2.8rem;color:var(--branco);font-family:var(--corpo);font-size:0.85rem;outline:none;transition:border-color 0.2s;}
+    .search-input::placeholder{color:var(--cinza);}
+    .search-input:focus{border-color:var(--terra);}
+    .filter-select{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:2px;padding:0.7rem 1rem;color:var(--branco);font-family:var(--corpo);font-size:0.8rem;outline:none;cursor:pointer;transition:border-color 0.2s;}
+    .filter-select:focus{border-color:var(--terra);}
+    .filter-select option{background:var(--escuro);}
+    .sort-btn-wrap{display:flex;gap:0.5rem;margin-left:auto;}
+    .sort-btn{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--cinza);padding:0.6rem 1rem;border-radius:2px;font-family:var(--corpo);font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+    .sort-btn:hover,.sort-btn.active{background:var(--terra);border-color:var(--terra);color:var(--branco);}
+    .results-info{font-size:0.75rem;color:var(--cinza);white-space:nowrap;}
+    .results-info strong{color:var(--ocre);}
+    .btn-primary { border: none; background: var(--terra); color: var(--branco); padding: 0.9rem 2rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; border-radius: 2px; display: inline-block; transition: background 0.25s; }
+    .btn-primary:hover { background: var(--ocre); color: var(--noite); }
+
+    /* GRID */
+    .pontos-section{padding:4rem 5%;max-width:1400px;margin:0 auto;}
+    .pontos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+
+    .ponto-card{border:1px solid rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;cursor:pointer;background:var(--escuro);text-decoration:none;display:block;}
+    .ponto-card:hover{border-color:var(--terra);transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.3);}
+    .ponto-img-wrap{position:relative;overflow:hidden;}
+    .ponto-img{width:100%;height:220px;object-fit:cover;display:block;transition:transform 0.5s;}
+    .ponto-card:hover .ponto-img{transform:scale(1.06);}
+    .ponto-badge{position:absolute;top:1rem;left:1rem;background:rgba(13,17,23,0.75);backdrop-filter:blur(6px);padding:0.3rem 0.8rem;border-radius:2px;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--branco);}
+    .ponto-badge.gratuito{background:rgba(45,106,79,0.8);color:#fff;}
+    .ponto-fav{position:absolute;top:1rem;right:1rem;width:34px;height:34px;background:rgba(13,17,23,0.6);border:1px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;opacity:0;transition:opacity 0.3s;}
+    .ponto-card:hover .ponto-fav{opacity:1;}
+    .ponto-fav:hover{background:rgba(194,91,42,0.5);}
+    .ponto-body{padding:1.5rem;}
+    .ponto-cat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;}
+    .ponto-cat{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--terra);}
+    .ponto-rating{font-size:0.75rem;color:var(--ocre);font-weight:600;}
+    .ponto-nome{font-family:var(--display);font-size:1.15rem;font-weight:700;color:var(--branco);margin-bottom:0.5rem;line-height:1.2;}
+    .ponto-desc{font-size:0.78rem;color:var(--cinza);line-height:1.65;margin-bottom:1rem;}
+    .ponto-meta{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);padding-top:1rem;}
+    .ponto-loc{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--cinza);}
+    .ponto-preco{font-size:0.72rem;color:var(--ocre);}
+
+    /* DESTAQUES FEATURED */
+    .featured-card{grid-column:1/3;}
+    .featured-card .ponto-img{height:340px;}
+    .featured-card .ponto-nome{font-size:1.6rem;}
+
+    /* Paginação */
+    .paginacao {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 4rem;
+    }
+    .pag-btn {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--cinza);
+      font-size: 0.82rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+      font-family: var(--corpo);
+    }
+    .pag-btn:hover, .pag-btn.ativo { background: var(--terra); border-color: var(--terra); color: var(--branco); }
+
+    .fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .fade-up.visible{opacity:1;transform:translateY(0);}
+
+    footer{background:#070B10;padding:5rem 5% 2.5rem;border-top:1px solid rgba(255,255,255,0.04);}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;margin-bottom:4rem;}
+    .footer-brand .marca{font-family:var(--stamp);font-size:2rem;letter-spacing:3px;color:var(--branco);}
+    .footer-brand .sub{font-size:0.58rem;letter-spacing:4px;color:var(--ocre);margin-bottom:1.2rem;display:block;}
+    .footer-brand p{font-size:0.82rem;color:var(--cinza);line-height:1.75;max-width:280px;}
+    .footer-col h4{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--branco);margin-bottom:1.5rem;}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.75rem;}
+    .footer-col ul a{text-decoration:none;font-size:0.82rem;color:var(--cinza);transition:color 0.2s;}
+    .footer-col ul a:hover{color:var(--ocre);}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,0.05);padding-top:2rem;display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:rgba(140,155,176,0.5);}
+
+    @media(max-width:1024px){.pontos-grid{grid-template-columns:1fr 1fr;}.featured-card{grid-column:1/3;}.page-hero-inner{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){.nav-links{display:none;}.pontos-grid{grid-template-columns:1fr;}.featured-card{grid-column:auto;}.footer-grid{grid-template-columns:1fr;}.filters-inner{flex-direction:column;align-items:stretch;}}
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div>
+        <div class="breadcrumb"><a href="index.html">Início</a><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg><span>Destinos</span></div>
+        <div class="page-eyebrow">Angola</div>
+        <h1 class="page-title"> {{pontos_turisticos|length}} Destinos<br/><em>Imperdíveis</em></h1>
+        <p class="page-desc">Das praias atlânticas às cataratas do interior, das chanas do leste, das florestas equatoriais aos desertos ancestrais — descobre os destinos mais extraordinários de Angola.</p>
+      </div>
+     
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters-section">
+    <form method="get" class="filters-inner">
+      <div class="search-input-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" name="search" type="text" placeholder="Pesquisar destinos..." />
+      </div>
+      <select class="filter-select" name="provincia">
+        <option value="">Todas as Províncias</option>
+        {% for p in provincas %}
+          <option value="{{p.id}}" {% if p.id == provincia %} selected {% endif %}>{{p.nome}}</option>
+        {% endfor %}
+      </select>
+      
+      <select class="filter-select" name="entrada">
+        <option value="" >Entrada: todas</option>
+        <option value="gratuito" {% if entrada == 'gratuito' %} selected {% endif %}>Entrada gratuita</option>
+        <option value="pago" {% if entrada == 'pago' %} selected {% endif %}>Entrada paga</option>
+      </select>
+
+      <button type="submit" class="btn-primary">Pesquisar</button>
+
+      <span class="results-info">A mostrar <strong id="count">{{pontos_turisticos|length}}</strong> destinos</span>
+    </form>
+  </div>
+
+  <!-- GRID -->
+  <section class="pontos-section">
+    <div class="pontos-grid" id="pontos-grid">
+
+      {% for p in pontos_turisticos %}
+      
+        <a href="{% url 'ponto_turistico_detalhe' p.id %}" class="ponto-card featured fade-up" data-cat="natureza" data-prov="Malanje">
+          <div class="ponto-img-wrap">
+            <img class="ponto-img" src="{{p.foto_principal.url}}" alt="{{p.nome}}" />
+            {% if p.destaque %}
+              <span class="ponto-badge">⭐ Em Destaque</span>
+            {% endif %}
+            <button class="ponto-fav" style="color: #fff;" onclick="event.preventDefault()">♡</button>
+          </div>
+          <div class="ponto-body">
+            <div class="ponto-cat-row"><div class="ponto-cat">💧 {{p.nome|slice:20}}{% if p.nome|length > 20 %}...{% endif %}</div><div class="ponto-rating">⭐ {{p.total_avaliacoes}} · 2.3K</div></div>
+            <div class="ponto-nome">{{p.nome}}</div>
+            <p class="ponto-desc">{{p.descricao|slice:70}}{% if p.descricao|length > 70 %}...{% endif %}</p>
+            <div class="ponto-meta"><div class="ponto-loc"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {{p.provincia.nome}} · {{p.municipio.nome}}
+            </div><span class="ponto-preco"> {% if p.entrada_gratuita %} Entrada gratuita {% else %} {{p.preco_entrada}} AOA {% endif %} </span></div>
+          </div>
+        </a>
+      {% endfor %}
+
+    </div>
+
+    <!-- Paginação -->
+    {% if pontos_turisticos.has_other_pages %}
+      <div class="paginacao">
+
+        {% if pontos_turisticos.has_previous %}
+          <a href="?page={{pontos_turisticos.previous_page_number}}&per_page={{per_page}}" class="pag-btn">‹</a>
+        {% endif %}
+
+        {% for num in pontos_turisticos.paginator.page_range %}
+          {% if pontos_turisticos.number == num %}
+            <button class="pag-btn ativo">{{num}}</button>
+          {% else %}
+            <a href="?page={{num}}&per_page={{per_page}}" class="pag-btn">{{num}}</a>
+          {% endif %}
+        {% endfor %}
+        
+        {% if pontos_turisticos.has_next %}
+          <a href="?page={{pontos_turisticos.next_page_number}}&per_page={{per_page}}" class="pag-btn">›</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+
+
+  <script>
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const obs = new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');obs.unobserve(el.target);}});},{threshold:0.08});
+    fadeEls.forEach(el=>obs.observe(el));
+
+    function filterCat(btn, cat){
+      document.querySelectorAll('.cat-pill').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const cards=document.querySelectorAll('.ponto-card');
+      let n=0;
+      cards.forEach(c=>{const show=cat==='all'||c.dataset.cat.includes(cat);c.style.display=show?'':'none';if(show)n++;});
+      document.getElementById('count').textContent=n;
+    }
+    function filterProv(val){
+      const cards=document.querySelectorAll('.ponto-card');
+      let n=0;
+      cards.forEach(c=>{const show=!val||c.dataset.prov===val;c.style.display=show?'':'none';if(show)n++;});
+      document.getElementById('count').textContent=n;
+    }
+    function filterSearch(val){
+      const q=val.toLowerCase();
+      const cards=document.querySelectorAll('.ponto-card');
+      let n=0;
+      cards.forEach(c=>{
+        const nome=c.querySelector('.ponto-nome').textContent.toLowerCase();
+        const show=nome.includes(q);
+        c.style.display=show?'':'none';
+        if(show)n++;
+      });
+      document.getElementById('count').textContent=n;
+    }
+    document.querySelectorAll('.sort-btn').forEach(b=>{b.addEventListener('click',function(){document.querySelectorAll('.sort-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active');});});
+  </script>
+</body>
+</html>
+{% endblock  %}

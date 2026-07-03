@@ -1,0 +1,353 @@
+{% extends "pagebase/base.html" %}
+{% load static %}
+
+{% block title %}Assistente IA · Explora Angola{% endblock %}
+
+{% block content %}
+<section class="ia-page">
+  <style>
+    /* ============================================================
+       ASSISTENTE IA — usa as variáveis de :root já definidas em
+       base.html; os valores depois de "," são apenas fallback caso
+       este bloco seja renderizado fora desse layout.
+    ============================================================ */
+    .ia-page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 7rem 5%;
+      min-height: 80vh;
+    }
+
+    .ia-header { max-width: 640px; margin-bottom: 3rem; }
+    .ia-header .section-title { margin-top: 0.4rem; }
+    .ia-header p {
+      margin-top: 1.2rem;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--cinza, #8C9BB0);
+    }
+
+    .ia-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ----- Barra lateral ----- */
+    .ia-sidebar {
+      background: var(--escuro, #1A2130);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 1.8rem;
+      position: sticky;
+      top: 6.5rem;
+    }
+    .ia-sidebar h4 {
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--terra, #C25B2A);
+      margin-bottom: 1rem;
+    }
+    .ia-sidebar h4:not(:first-child) { margin-top: 2rem; }
+
+    .ia-sugestoes { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .ia-chip {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(247,243,238,0.82);
+      font-family: var(--corpo, 'Inter', sans-serif);
+      font-size: 0.8rem;
+      line-height: 1.4;
+      padding: 0.7rem 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .ia-chip:hover, .ia-chip:focus-visible {
+      border-color: var(--terra, #C25B2A);
+      background: rgba(194,91,42,0.12);
+      color: var(--branco, #F7F3EE);
+      outline: none;
+    }
+
+    .ia-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .ia-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      color: var(--cinza, #8C9BB0);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+    }
+
+    /* ----- Janela de chat ----- */
+    .ia-chat-container {
+      background: var(--escuro, #1A2130);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      height: 68vh;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    .ia-mensagens {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .ia-mensagens::-webkit-scrollbar { width: 6px; }
+    .ia-mensagens::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+
+    .ia-msg {
+      max-width: 78%;
+      padding: 0.85rem 1.1rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .ia-msg p { margin: 0; white-space: pre-wrap; }
+
+    .ia-msg-bot {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.04);
+      color: rgba(247,243,238,0.9);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-bottom-left-radius: 2px;
+    }
+    .ia-msg-user {
+      align-self: flex-end;
+      background: var(--terra, #C25B2A);
+      color: var(--branco, #F7F3EE);
+      border-bottom-right-radius: 2px;
+    }
+    .ia-msg-erro {
+      align-self: flex-start;
+      background: rgba(194,91,42,0.12);
+      border: 1px solid var(--terra, #C25B2A);
+      color: var(--branco, #F7F3EE);
+    }
+
+    .ia-status {
+      padding: 0 2rem 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: var(--ocre, #E8A04A);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ia-status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ocre, #E8A04A);
+      animation: ia-pulse 1.1s ease-in-out infinite;
+    }
+    @keyframes ia-pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+    .ia-form {
+      display: flex;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 1rem 1.2rem;
+      gap: 0.8rem;
+    }
+    .ia-form input[type="text"] {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 0.85rem 1rem;
+      color: var(--branco, #F7F3EE);
+      font-family: var(--corpo, 'Inter', sans-serif);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ia-form input[type="text"]::placeholder { color: var(--cinza, #8C9BB0); }
+    .ia-form input[type="text"]:focus-visible { border-color: var(--ocre, #E8A04A); }
+
+    .ia-enviar {
+      background: var(--terra, #C25B2A);
+      color: var(--branco, #F7F3EE);
+      border: none;
+      padding: 0 1.6rem;
+      font-family: var(--corpo, 'Inter', sans-serif);
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .ia-enviar:hover, .ia-enviar:focus-visible { background: var(--ocre, #E8A04A); color: var(--noite, #0D1117); outline: none; }
+    .ia-enviar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    @media (max-width: 900px) {
+      .ia-layout { grid-template-columns: 1fr; }
+      .ia-sidebar { position: static; }
+      .ia-chat-container { height: 60vh; }
+    }
+  </style>
+
+  <div class="ia-header fade-up">
+    <div class="section-label">Explora com IA</div>
+    <h1 class="section-title">Assistente IA<br/>de Turismo em Angola</h1>
+    <p>
+      Pergunta sobre províncias, pontos turísticos, gastronomia ou alojamentos.
+      As respostas baseiam-se nos dados reais cadastrados na plataforma Explora Angola.
+    </p>
+  </div>
+
+  <div class="ia-layout">
+    <aside class="ia-sidebar fade-up">
+      <h4>Sugestões para Começar</h4>
+      <ul class="ia-sugestoes">
+        {% for pergunta in perguntas_sugeridas %}
+          <li>
+            <button type="button" class="ia-chip" data-pergunta="{{ pergunta }}">{{ pergunta }}</button>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if provincias_sugestao %}
+        <h4>Províncias na Plataforma</h4>
+        <div class="ia-tags">
+          {% for nome in provincias_sugestao %}
+            <span class="ia-tag">{{ nome }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </aside>
+
+    <div class="ia-chat-container fade-up">
+      <div class="ia-mensagens" id="ia-mensagens" role="log" aria-live="polite">
+        {% if historico %}
+          {% for conversa in historico %}
+            <div class="ia-msg ia-msg-user"><p>{{ conversa.pergunta }}</p></div>
+            <div class="ia-msg ia-msg-bot"><p>{{ conversa.resposta }}</p></div>
+          {% endfor %}
+        {% else %}
+          <div class="ia-msg ia-msg-bot">
+            <p>Olá! 👋 Sou o Assistente IA do Explora Angola. Em que posso ajudar-te hoje?</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ia-status" id="ia-status" hidden>
+        <span class="ia-status-dot"></span>
+        <span>O assistente está a escrever...</span>
+      </div>
+
+      <form id="ia-form" class="ia-form" autocomplete="off">
+        {% csrf_token %}
+        <input
+          type="text"
+          id="ia-input"
+          name="pergunta"
+          placeholder="Escreve a tua pergunta sobre Angola..."
+          maxlength="1000"
+          required
+        />
+        <button type="submit" class="ia-enviar" id="ia-enviar-btn">Enviar</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  
+(function () {
+  const form        = document.getElementById('ia-form');
+  const input        = document.getElementById('ia-input');
+  const botaoEnviar  = document.getElementById('ia-enviar-btn');
+  const mensagens     = document.getElementById('ia-mensagens');
+  const status        = document.getElementById('ia-status');
+  const urlPerguntar = "{% url 'assistente_ia_perguntar' %}";
+
+  function obterTokenCSRF() {
+    const campo = form.querySelector('[name=csrfmiddlewaretoken]');
+    return campo ? campo.value : '';
+  }
+
+  function rolarParaFinal() {
+    mensagens.scrollTop = mensagens.scrollHeight;
+  }
+
+  function adicionarMensagem(texto, tipo) {
+    const bolha = document.createElement('div');
+    bolha.className = 'ia-msg ' + tipo;
+    const paragrafo = document.createElement('p');
+    paragrafo.textContent = texto;
+    bolha.appendChild(paragrafo);
+    mensagens.appendChild(bolha);
+    rolarParaFinal();
+    return bolha;
+  }
+
+  function definirCarregando(carregando) {
+    status.hidden = !carregando;
+    input.disabled = carregando;
+    botaoEnviar.disabled = carregando;
+    if (carregando) rolarParaFinal();
+  }
+
+  async function enviarPergunta(pergunta) {
+    adicionarMensagem(pergunta, 'ia-msg-user');
+    definirCarregando(true);
+
+    try {
+      const resposta = await fetch(urlPerguntar, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': obterTokenCSRF(),
+        },
+        body: JSON.stringify({ pergunta: pergunta }),
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        adicionarMensagem(dados.erro || 'Ocorreu um erro inesperado.', 'ia-msg-erro');
+        return;
+      }
+
+      adicionarMensagem(dados.resposta, 'ia-msg-bot');
+    } catch (erro) {
+      adicionarMensagem('Não foi possível ligar ao assistente. Verifica a tua ligação e tenta de novo.', 'ia-msg-erro');
+    } finally {
+      definirCarregando(false);
+      input.focus();
+    }
+  }
+
+  form.addEventListener('submit', function (evento) {
+    evento.preventDefault();
+    const pergunta = input.value.trim();
+    if (!pergunta) return;
+    input.value = '';
+    enviarPergunta(pergunta);
+  });
+
+  document.querySelectorAll('.ia-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      const pergunta = chip.getAttribute('data-pergunta');
+      if (pergunta) enviarPergunta(pergunta);
+    });
+  });
+
+  rolarParaFinal();
+})();
+</script>
+{% endblock %}
