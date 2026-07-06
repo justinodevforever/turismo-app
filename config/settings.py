@@ -288,176 +288,176 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF    = True
     X_FRAME_OPTIONS                = 'DENY'
     
-JAZZMIN_SETTINGS = {
+# JAZZMIN_SETTINGS = {
 
-    # ===========================
-    # GERAL
-    # ===========================
-    "site_title": "Sistema Académico",
-    "site_header": "Painel Administrativo",
-    "site_brand": "SIGA",
-    "welcome_sign": "Bem-vindo ao Sistema Integrado de Gestão Académica",
+#     # ===========================
+#     # GERAL
+#     # ===========================
+#     "site_title": "Sistema Académico",
+#     "site_header": "Painel Administrativo",
+#     "site_brand": "SIGA",
+#     "welcome_sign": "Bem-vindo ao Sistema Integrado de Gestão Académica",
 
-    "copyright": "© 2026 SIGA - Todos os direitos reservados",
+#     "copyright": "© 2026 SIGA - Todos os direitos reservados",
 
-    "site_logo": "img/logo.png",
-    "login_logo": "img/logo.png",
-    "login_logo_dark": "img/logo.png",
-    "site_logo_classes": "img-circle elevation-3",
-    "site_icon": "img/favicon.ico",
+#     "site_logo": "img/logo.png",
+#     "login_logo": "img/logo.png",
+#     "login_logo_dark": "img/logo.png",
+#     "site_logo_classes": "img-circle elevation-3",
+#     "site_icon": "img/favicon.ico",
 
-    "search_model": [
-        "authenticate.usuario",
-        "auth.Group",
-    ],
+#     "search_model": [
+#         "authenticate.usuario",
+#         "auth.Group",
+#     ],
 
-    "user_avatar": None,
+#     "user_avatar": None,
 
-    # ===========================
-    # MENU SUPERIOR
-    # ===========================
+#     # ===========================
+#     # MENU SUPERIOR
+#     # ===========================
 
-    "topmenu_links": [
+#     "topmenu_links": [
 
-        {
-            "model": "authenticate.usuario",
-        },
+#         {
+#             "model": "authenticate.usuario",
+#         },
 
-        {
-            "model": "auth.Group",
-        },
+#         {
+#             "model": "auth.Group",
+#         },
 
-    ],
+#     ],
 
-    # ===========================
-    # MENU DO UTILIZADOR
-    # ===========================
+#     # ===========================
+#     # MENU DO UTILIZADOR
+#     # ===========================
 
-    "usermenu_links": [
+#     "usermenu_links": [
 
-        {
-            "name": "Página Inicial",
-            "url": "/",
-        },
+#         {
+#             "name": "Página Inicial",
+#             "url": "/",
+#         },
 
       
 
-    ],
+#     ],
 
-    # ===========================
-    # MENU LATERAL
-    # ===========================
+#     # ===========================
+#     # MENU LATERAL
+#     # ===========================
 
-    "show_sidebar": True,
-    "navigation_expanded": True,
+#     "show_sidebar": True,
+#     "navigation_expanded": True,
 
-    "hide_apps": [
+#     "hide_apps": [
 
-    ],
+#     ],
 
-    "hide_models": [
+#     "hide_models": [
 
-    ],
+#     ],
 
-    "order_with_respect_to": [
+#     "order_with_respect_to": [
 
-        "auth",
+#         "auth",
 
-    ],
+#     ],
 
-    "custom_links": {
+#     "custom_links": {
 
-    },
+#     },
 
-    # ===========================
-    # ÍCONES
-    # ===========================
+#     # ===========================
+#     # ÍCONES
+#     # ===========================
 
-    "icons": {
+#     "icons": {
 
-        "authenticate": "fas fa-user-shield",
-        "authenticate.usuario": "fas fa-user",
-        "auth.group": "fas fa-users",
+#         "authenticate": "fas fa-user-shield",
+#         "authenticate.usuario": "fas fa-user",
+#         "auth.group": "fas fa-users",
 
-    },
+#     },
 
-    "default_icon_parents": "fas fa-folder-open",
-    "default_icon_children": "fas fa-circle",
+#     "default_icon_parents": "fas fa-folder-open",
+#     "default_icon_children": "fas fa-circle",
 
-    # ===========================
-    # MODAIS
-    # ===========================
+#     # ===========================
+#     # MODAIS
+#     # ===========================
 
-    "related_modal_active": True,
+#     "related_modal_active": True,
 
-    # ===========================
-    # PERSONALIZAÇÃO
-    # ===========================
+#     # ===========================
+#     # PERSONALIZAÇÃO
+#     # ===========================
 
-    "custom_css": "css/admin.css",
-    #"custom_js": "js/admin.js",
+#     "custom_css": "css/admin.css",
+#     #"custom_js": "js/admin.js",
 
-    "use_google_fonts_cdn": True,
+#     "use_google_fonts_cdn": True,
 
-    "show_ui_builder": False,
+#     "show_ui_builder": False,
 
-    # ===========================
-    # FORMULÁRIOS
-    # ===========================
+#     # ===========================
+#     # FORMULÁRIOS
+#     # ===========================
 
-    "changeform_format": "horizontal_tabs",
+#     "changeform_format": "horizontal_tabs",
 
-    "changeform_format_overrides": {
+#     "changeform_format_overrides": {
 
-        "authenticate.usuario": "collapsible",
-        "auth.group": "vertical_tabs",
+#         "authenticate.usuario": "collapsible",
+#         "auth.group": "vertical_tabs",
 
-    },
+#     },
 
-    "language_chooser": True,
-}
+#     "language_chooser": True,
+# }
 
-JAZZMIN_UI_TWEAKS = {
+# JAZZMIN_UI_TWEAKS = {
 
-    "navbar": "navbar-dark navbar-navy",
+#     "navbar": "navbar-dark navbar-navy",
 
-    "no_navbar_border": True,
+#     "no_navbar_border": True,
 
-    "navbar_fixed": True,
+#     "navbar_fixed": True,
 
-    "layout_boxed": False,
+#     "layout_boxed": False,
 
-    "footer_fixed": False,
+#     "footer_fixed": False,
 
-    "sidebar_fixed": True,
+#     "sidebar_fixed": True,
 
-    "sidebar": "sidebar-dark-navy",
+#     "sidebar": "sidebar-dark-navy",
 
-    "sidebar_nav_small_text": False,
+#     "sidebar_nav_small_text": False,
 
-    "sidebar_disable_expand": False,
+#     "sidebar_disable_expand": False,
 
-    "sidebar_nav_child_indent": True,
+#     "sidebar_nav_child_indent": True,
 
-    "sidebar_nav_compact_style": False,
+#     "sidebar_nav_compact_style": False,
 
-    "sidebar_nav_legacy_style": False,
+#     "sidebar_nav_legacy_style": False,
 
-    "sidebar_nav_flat_style": False,
+#     "sidebar_nav_flat_style": False,
 
-    "theme": "flatly",
+#     "theme": "flatly",
 
-    "dark_mode_theme": "darkly",
+#     "dark_mode_theme": "darkly",
 
-    "button_classes": {
+#     "button_classes": {
 
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
+#         "primary": "btn-primary",
+#         "secondary": "btn-secondary",
+#         "info": "btn-info",
+#         "warning": "btn-warning",
+#         "danger": "btn-danger",
+#         "success": "btn-success"
 
-    }
+#     }
 
-}
+# }
