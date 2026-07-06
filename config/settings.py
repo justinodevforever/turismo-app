@@ -166,23 +166,13 @@ TEMPLATES = [
 ]
 
 # ============================================================
-# CACHE — Redis
+# CACHE
 # ============================================================
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': config('REDIS_URL', default='redis://localhost:6379/1'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'IGNORE_EXCEPTIONS': True,
-        },
-        'KEY_PREFIX': 'explora',
-        'TIMEOUT': 300,
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
 
 # ============================================================
 # CELERY — Processamento Assíncrono
