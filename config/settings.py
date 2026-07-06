@@ -288,176 +288,78 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF    = True
     X_FRAME_OPTIONS                = 'DENY'
     
-# JAZZMIN_SETTINGS = {
+JAZZMIN_SETTINGS = {
+    "site_title": "Sistema Académico",
+    "site_header": "Painel Administrativo",
+    "site_brand": "SIGA",
 
-#     # ===========================
-#     # GERAL
-#     # ===========================
-#     "site_title": "Sistema Académico",
-#     "site_header": "Painel Administrativo",
-#     "site_brand": "SIGA",
-#     "welcome_sign": "Bem-vindo ao Sistema Integrado de Gestão Académica",
+    "search_model": [
+        "authenticate.usuario",
+        "auth.group",
+    ],
 
-#     "copyright": "© 2026 SIGA - Todos os direitos reservados",
+    "topmenu_links": [
+        {"model": "authenticate.usuario"},
+        {"model": "auth.group"},
+    ],
 
-#     "site_logo": "img/logo.png",
-#     "login_logo": "img/logo.png",
-#     "login_logo_dark": "img/logo.png",
-#     "site_logo_classes": "img-circle elevation-3",
-#     "site_icon": "img/favicon.ico",
+    "icons": {
+        "authenticate": "fas fa-user-shield",
+        "authenticate.usuario": "fas fa-user",
+        "auth.group": "fas fa-users",
+    },
 
-#     "search_model": [
-#         "authenticate.usuario",
-#         "auth.Group",
-#     ],
+    "changeform_format_overrides": {
+        "authenticate.usuario": "collapsible",
+        "auth.group": "vertical_tabs",
+    },
 
-#     "user_avatar": None,
+    "related_modal_active": True,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+}
 
-#     # ===========================
-#     # MENU SUPERIOR
-#     # ===========================
+JAZZMIN_UI_TWEAKS = {
 
-#     "topmenu_links": [
+    "navbar": "navbar-dark navbar-navy",
 
-#         {
-#             "model": "authenticate.usuario",
-#         },
+    "no_navbar_border": True,
 
-#         {
-#             "model": "auth.Group",
-#         },
+    "navbar_fixed": True,
 
-#     ],
+    "layout_boxed": False,
 
-#     # ===========================
-#     # MENU DO UTILIZADOR
-#     # ===========================
+    "footer_fixed": False,
 
-#     "usermenu_links": [
+    "sidebar_fixed": True,
 
-#         {
-#             "name": "Página Inicial",
-#             "url": "/",
-#         },
+    "sidebar": "sidebar-dark-navy",
 
-      
+    "sidebar_nav_small_text": False,
 
-#     ],
+    "sidebar_disable_expand": False,
 
-#     # ===========================
-#     # MENU LATERAL
-#     # ===========================
+    "sidebar_nav_child_indent": True,
 
-#     "show_sidebar": True,
-#     "navigation_expanded": True,
+    "sidebar_nav_compact_style": False,
 
-#     "hide_apps": [
+    "sidebar_nav_legacy_style": False,
 
-#     ],
+    "sidebar_nav_flat_style": False,
 
-#     "hide_models": [
+    "theme": "flatly",
 
-#     ],
+    "dark_mode_theme": "darkly",
 
-#     "order_with_respect_to": [
+    "button_classes": {
 
-#         "auth",
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
 
-#     ],
+    }
 
-#     "custom_links": {
-
-#     },
-
-#     # ===========================
-#     # ÍCONES
-#     # ===========================
-
-#     "icons": {
-
-#         "authenticate": "fas fa-user-shield",
-#         "authenticate.usuario": "fas fa-user",
-#         "auth.group": "fas fa-users",
-
-#     },
-
-#     "default_icon_parents": "fas fa-folder-open",
-#     "default_icon_children": "fas fa-circle",
-
-#     # ===========================
-#     # MODAIS
-#     # ===========================
-
-#     "related_modal_active": True,
-
-#     # ===========================
-#     # PERSONALIZAÇÃO
-#     # ===========================
-
-#     "custom_css": "css/admin.css",
-#     #"custom_js": "js/admin.js",
-
-#     "use_google_fonts_cdn": True,
-
-#     "show_ui_builder": False,
-
-#     # ===========================
-#     # FORMULÁRIOS
-#     # ===========================
-
-#     "changeform_format": "horizontal_tabs",
-
-#     "changeform_format_overrides": {
-
-#         "authenticate.usuario": "collapsible",
-#         "auth.group": "vertical_tabs",
-
-#     },
-
-#     "language_chooser": True,
-# }
-
-# JAZZMIN_UI_TWEAKS = {
-
-#     "navbar": "navbar-dark navbar-navy",
-
-#     "no_navbar_border": True,
-
-#     "navbar_fixed": True,
-
-#     "layout_boxed": False,
-
-#     "footer_fixed": False,
-
-#     "sidebar_fixed": True,
-
-#     "sidebar": "sidebar-dark-navy",
-
-#     "sidebar_nav_small_text": False,
-
-#     "sidebar_disable_expand": False,
-
-#     "sidebar_nav_child_indent": True,
-
-#     "sidebar_nav_compact_style": False,
-
-#     "sidebar_nav_legacy_style": False,
-
-#     "sidebar_nav_flat_style": False,
-
-#     "theme": "flatly",
-
-#     "dark_mode_theme": "darkly",
-
-#     "button_classes": {
-
-#         "primary": "btn-primary",
-#         "secondary": "btn-secondary",
-#         "info": "btn-info",
-#         "warning": "btn-warning",
-#         "danger": "btn-danger",
-#         "success": "btn-success"
-
-#     }
-
-# }
+}
