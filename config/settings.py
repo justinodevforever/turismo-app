@@ -307,7 +307,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": "img/favicon.ico",
 
     "search_model": [
-        "auth.User",
+        "authenticate.usuario",
         "auth.Group",
     ],
 
@@ -325,7 +325,7 @@ JAZZMIN_SETTINGS = {
         },
 
         {
-            "model": "auth.User",
+            "model": "authenticate.usuario",
         },
 
         {
@@ -345,11 +345,7 @@ JAZZMIN_SETTINGS = {
             "url": "/",
         },
 
-        {
-            "name": "Documentação",
-            "url": "https://docs.djangoproject.com/",
-            "new_window": True,
-        },
+      
 
     ],
 
@@ -384,8 +380,8 @@ JAZZMIN_SETTINGS = {
 
     "icons": {
 
-        "auth": "fas fa-user-shield",
-        "auth.user": "fas fa-user",
+        "authenticate": "fas fa-user-shield",
+        "authenticate.usuario": "fas fa-user",
         "auth.group": "fas fa-users",
 
     },
@@ -418,7 +414,7 @@ JAZZMIN_SETTINGS = {
 
     "changeform_format_overrides": {
 
-        "auth.user": "collapsible",
+        "authenticate.usuario": "collapsible",
         "auth.group": "vertical_tabs",
 
     },
