@@ -78,52 +78,48 @@ class ModeloPublicavelAdminMixin(ModeloBaseAdminMixin):
 
 @admin.register(Usuario)
 class UsuarioAdmin(UserAdmin):
-    """
-    Admin do usuário customizado.
-    Herda de UserAdmin (e não de ModelAdmin puro) para manter o fluxo
-    correto de criação/alteração de password com hashing.
-    """
 
     model = Usuario
-    ordering = ('-criado_em',)
+    ordering = ('email',)
 
     list_display = (
-        'email', 'nome', 'apelido', 'tipo_usuario_badge',
-        'foto_preview', 'is_active', 'is_staff', 'ultimo_acesso_em', 'criado_em',
+        'email', 'nome', 'apelido', 'tipo_usuario',
+        'is_active', 'is_staff'
     )
-    list_display_links = ('email', 'nome')
-    list_filter = ('tipo_usuario', 'is_active', 'is_staff', 'idioma_preferido', 'criado_em')
-    search_fields = ('email', 'nome', 'apelido', 'telefone')
-    readonly_fields = ('uuid', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso', 'foto_preview_grande')
-    date_hierarchy = 'criado_em'
-    list_per_page = 30
 
-    # Sem 'username' — o login é feito por e-mail
+    list_filter = ('tipo_usuario', 'is_active', 'is_staff')
+
+    search_fields = ('email', 'nome', 'apelido')
+
+    # ⚠️ CRÍTICO: usa email como "username"
     fieldsets = (
-        (_('Credenciais'), {'fields': ('email', 'password')}),
+        (_('Credenciais'), {
+            'fields': ('email', 'password')
+        }),
         (_('Dados pessoais'), {
-            'fields': ('nome', 'apelido', 'telefone', 'bio', 'foto_perfil', 'foto_preview_grande')
+            'fields': ('nome', 'apelido', 'telefone', 'bio', 'foto_perfil')
         }),
-        (_('Tipo e permissões'), {
-            'fields': ('tipo_usuario', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        (_('Permissões'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
         }),
-        (_('Preferências'), {
-            'fields': ('idioma_preferido', 'notificacoes_email', 'modo_escuro')
+        (_('Tipo'), {
+            'fields': ('tipo_usuario', 'idioma_preferido')
         }),
         (_('Auditoria'), {
-            'fields': ('uuid', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso'),
-            'classes': ('collapse',),
+            'fields': ('last_login',),
         }),
     )
 
     add_fieldsets = (
-        (_('Criar usuário'), {
+        (None, {
             'classes': ('wide',),
-            'fields': ('email', 'nome', 'tipo_usuario', 'password1', 'password2'),
+            'fields': ('email', 'nome', 'apelido', 'password1', 'password2', 'is_active', 'is_staff'),
         }),
     )
 
-    actions = ['acao_ativar', 'acao_inativar']
+    filter_horizontal = ('groups', 'user_permissions')
+
+    readonly_fields = ('last_login',)
 
     @admin.action(description=_('✅ Ativar contas selecionadas'))
     def acao_ativar(self, request, queryset):
