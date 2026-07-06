@@ -320,11 +320,6 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         {
-            "name": "Dashboard",
-            "url": "admin:index",
-        },
-
-        {
             "model": "authenticate.usuario",
         },
 
@@ -400,7 +395,7 @@ JAZZMIN_SETTINGS = {
     # ===========================
 
     "custom_css": "css/admin.css",
-    "custom_js": "js/admin.js",
+    #"custom_js": "js/admin.js",
 
     "use_google_fonts_cdn": True,
 
