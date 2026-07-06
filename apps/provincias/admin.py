@@ -1,271 +1,271 @@
-from django.contrib import admin
-from django.utils.html import format_html
+# from django.contrib import admin
+# from django.utils.html import format_html
 
-from .models import (
-    Regiao,
-    Provincia,
-    Municipio,
-    CategoriaTurismo,
-    PontoTuristico,
-    PratoTipico,
-    Favorito,
-    ConversaAI,
-)
-
-
-# ==========================================================
-# REGIÃO
-# ==========================================================
-
-@admin.register(Regiao)
-class RegiaoAdmin(admin.ModelAdmin):
-    list_display = (
-        "nome",
-        "slug",
-        "status",
-        "publicado_em",
-    )
-
-    search_fields = (
-        "nome",
-        "descricao",
-    )
-
-    list_filter = (
-        "status",
-        "publicado_em",
-    )
-
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+# from .models import (
+#     Regiao,
+#     Provincia,
+#     Municipio,
+#     CategoriaTurismo,
+#     PontoTuristico,
+#     PratoTipico,
+#     Favorito,
+#     ConversaAI,
+# )
 
 
-# ==========================================================
-# PROVÍNCIA
-# ==========================================================
+# # ==========================================================
+# # REGIÃO
+# # ==========================================================
 
-@admin.register(Provincia)
-class ProvinciaAdmin(admin.ModelAdmin):
+# @admin.register(Regiao)
+# class RegiaoAdmin(admin.ModelAdmin):
+#     list_display = (
+#         "nome",
+#         "slug",
+#         "status",
+#         "publicado_em",
+#     )
 
-    list_display = (
-        "nome",
-        "regiao",
-        "capital",
-        "codigo_iso",
-        "populacao",
-        "status",
-    )
+#     search_fields = (
+#         "nome",
+#         "descricao",
+#     )
 
-    list_filter = (
-        "regiao",
-        "status",
-    )
+#     list_filter = (
+#         "status",
+#         "publicado_em",
+#     )
 
-    search_fields = (
-        "nome",
-        "capital",
-        "codigo_iso",
-        "historia",
-        "cultura",
-    )
-
-    autocomplete_fields = (
-        "regiao",
-    )
-
-    filter_horizontal = (
-        "midias",
-    )
-
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
 
 
-# ==========================================================
-# MUNICÍPIO
-# ==========================================================
+# # ==========================================================
+# # PROVÍNCIA
+# # ==========================================================
 
-@admin.register(Municipio)
-class MunicipioAdmin(admin.ModelAdmin):
+# @admin.register(Provincia)
+# class ProvinciaAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "nome",
-        "provincia",
-        "populacao",
-        "status",
-    )
+#     list_display = (
+#         "nome",
+#         "regiao",
+#         "capital",
+#         "codigo_iso",
+#         "populacao",
+#         "status",
+#     )
 
-    list_filter = (
-        "provincia",
-        "status",
-    )
+#     list_filter = (
+#         "regiao",
+#         "status",
+#     )
 
-    search_fields = (
-        "nome",
-        "descricao",
-        "provincia__nome",
-    )
+#     search_fields = (
+#         "nome",
+#         "capital",
+#         "codigo_iso",
+#         "historia",
+#         "cultura",
+#     )
 
-    autocomplete_fields = (
-        "provincia",
-    )
+#     autocomplete_fields = (
+#         "regiao",
+#     )
 
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+#     filter_horizontal = (
+#         "midias",
+#     )
 
-
-# ==========================================================
-# CATEGORIA
-# ==========================================================
-
-@admin.register(CategoriaTurismo)
-class CategoriaTurismoAdmin(admin.ModelAdmin):
-
-    list_display = (
-        "nome",
-        "icone",
-        "cor_hex",
-    )
-
-    search_fields = (
-        "nome",
-        "descricao",
-    )
-
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
 
 
-# ==========================================================
-# PONTO TURÍSTICO
-# ==========================================================
+# # ==========================================================
+# # MUNICÍPIO
+# # ==========================================================
 
-@admin.register(PontoTuristico)
-class PontoTuristicoAdmin(admin.ModelAdmin):
+# @admin.register(Municipio)
+# class MunicipioAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "nome",
-        "provincia",
-        "municipio",
-        "media_avaliacao",
-        "status",
-    )
+#     list_display = (
+#         "nome",
+#         "provincia",
+#         "populacao",
+#         "status",
+#     )
 
-    list_filter = (
-        "provincia",
-        "municipio",
-        "status",
-        "entrada_gratuita",
-    )
+#     list_filter = (
+#         "provincia",
+#         "status",
+#     )
 
-    search_fields = (
-        "nome",
-        "descricao",
-        "provincia__nome",
-        "municipio__nome",
-    )
+#     search_fields = (
+#         "nome",
+#         "descricao",
+#         "provincia__nome",
+#     )
 
-    autocomplete_fields = (
-        "provincia",
-        "municipio",
-    )
+#     autocomplete_fields = (
+#         "provincia",
+#     )
 
-    filter_horizontal = (
-        "categorias",
-        "midias",
-    )
-
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
 
 
-# ==========================================================
-# PRATOS
-# ==========================================================
+# # ==========================================================
+# # CATEGORIA
+# # ==========================================================
 
-@admin.register(PratoTipico)
-class PratoTipicoAdmin(admin.ModelAdmin):
+# @admin.register(CategoriaTurismo)
+# class CategoriaTurismoAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "nome",
-        "provincia",
-        "vegetariano",
-        "destaque",
-    )
+#     list_display = (
+#         "nome",
+#         "icone",
+#         "cor_hex",
+#     )
 
-    list_filter = (
-        "provincia",
-        "vegetariano",
-        "destaque",
-    )
+#     search_fields = (
+#         "nome",
+#         "descricao",
+#     )
 
-    search_fields = (
-        "nome",
-        "descricao",
-        "ingredientes",
-    )
-
-    autocomplete_fields = (
-        "provincia",
-    )
-
-    prepopulated_fields = {
-        "slug": ("nome",)
-    }
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
 
 
-# ==========================================================
-# FAVORITOS
-# ==========================================================
+# # ==========================================================
+# # PONTO TURÍSTICO
+# # ==========================================================
 
-@admin.register(Favorito)
-class FavoritoAdmin(admin.ModelAdmin):
+# @admin.register(PontoTuristico)
+# class PontoTuristicoAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "usuario",
-        "ponto_turistico",
-    )
+#     list_display = (
+#         "nome",
+#         "provincia",
+#         "municipio",
+#         "media_avaliacao",
+#         "status",
+#     )
 
-    search_fields = (
-        "usuario__nome_completo",
-        "usuario__email",
-        "ponto_turistico__nome",
-    )
+#     list_filter = (
+#         "provincia",
+#         "municipio",
+#         "status",
+#         "entrada_gratuita",
+#     )
 
-    autocomplete_fields = (
-        "usuario",
-        "ponto_turistico",
-    )
+#     search_fields = (
+#         "nome",
+#         "descricao",
+#         "provincia__nome",
+#         "municipio__nome",
+#     )
+
+#     autocomplete_fields = (
+#         "provincia",
+#         "municipio",
+#     )
+
+#     filter_horizontal = (
+#         "categorias",
+#         "midias",
+#     )
+
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
 
 
-# ==========================================================
-# CONVERSAS IA
-# ==========================================================
+# # ==========================================================
+# # PRATOS
+# # ==========================================================
 
-@admin.register(ConversaAI)
-class ConversaAIAdmin(admin.ModelAdmin):
+# @admin.register(PratoTipico)
+# class PratoTipicoAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "usuario",
-        "criado_em",
-    )
+#     list_display = (
+#         "nome",
+#         "provincia",
+#         "vegetariano",
+#         "destaque",
+#     )
 
-    search_fields = (
-        "usuario__nome_completo",
-        "usuario__email",
-        "pergunta",
-        "resposta",
-    )
+#     list_filter = (
+#         "provincia",
+#         "vegetariano",
+#         "destaque",
+#     )
 
-    autocomplete_fields = (
-        "usuario",
-    )
+#     search_fields = (
+#         "nome",
+#         "descricao",
+#         "ingredientes",
+#     )
 
-    readonly_fields = (
-        "contexto",
-    )
+#     autocomplete_fields = (
+#         "provincia",
+#     )
+
+#     prepopulated_fields = {
+#         "slug": ("nome",)
+#     }
+
+
+# # ==========================================================
+# # FAVORITOS
+# # ==========================================================
+
+# @admin.register(Favorito)
+# class FavoritoAdmin(admin.ModelAdmin):
+
+#     list_display = (
+#         "usuario",
+#         "ponto_turistico",
+#     )
+
+#     search_fields = (
+#         "usuario__nome_completo",
+#         "usuario__email",
+#         "ponto_turistico__nome",
+#     )
+
+#     autocomplete_fields = (
+#         "usuario",
+#         "ponto_turistico",
+#     )
+
+
+# # ==========================================================
+# # CONVERSAS IA
+# # ==========================================================
+
+# @admin.register(ConversaAI)
+# class ConversaAIAdmin(admin.ModelAdmin):
+
+#     list_display = (
+#         "usuario",
+#         "criado_em",
+#     )
+
+#     search_fields = (
+#         "usuario__nome_completo",
+#         "usuario__email",
+#         "pergunta",
+#         "resposta",
+#     )
+
+#     autocomplete_fields = (
+#         "usuario",
+#     )
+
+#     readonly_fields = (
+#         "contexto",
+#     )
