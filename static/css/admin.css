@@ -1,0 +1,51 @@
+/* Fonte */
+
+body{
+    font-family: "Poppins", sans-serif;
+}
+
+/* Logo */
+
+.brand-link{
+    font-size:18px;
+    font-weight:700;
+}
+
+/* Sidebar */
+
+.main-sidebar{
+    box-shadow:0 0 20px rgba(0,0,0,.2);
+}
+
+/* Cards */
+
+.card{
+    border-radius:12px;
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+    border:none;
+}
+
+/* Botões */
+
+.btn{
+    border-radius:8px;
+}
+
+/* Tabelas */
+
+.table{
+    border-radius:10px;
+    overflow:hidden;
+}
+
+/* Inputs */
+
+.form-control{
+    border-radius:8px;
+}
+
+/* Cabeçalhos */
+
+.content-header h1{
+    font-weight:700;
+}

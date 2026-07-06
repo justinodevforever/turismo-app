@@ -46,6 +46,7 @@ ALLOWED_HOSTS=["*"]
 # APLICAÇÕES https://localhost:8000/
 # ============================================================
 DJANGO_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -286,3 +287,186 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER      = True
     SECURE_CONTENT_TYPE_NOSNIFF    = True
     X_FRAME_OPTIONS                = 'DENY'
+    
+JAZZMIN_SETTINGS = {
+
+    # ===========================
+    # GERAL
+    # ===========================
+    "site_title": "Sistema Académico",
+    "site_header": "Painel Administrativo",
+    "site_brand": "SIGA",
+    "welcome_sign": "Bem-vindo ao Sistema Integrado de Gestão Académica",
+
+    "copyright": "© 2026 SIGA - Todos os direitos reservados",
+
+    "site_logo": "img/logo.png",
+    "login_logo": "img/logo.png",
+    "login_logo_dark": "img/logo.png",
+    "site_logo_classes": "img-circle elevation-3",
+    "site_icon": "img/favicon.ico",
+
+    "search_model": [
+        "auth.User",
+        "auth.Group",
+    ],
+
+    "user_avatar": None,
+
+    # ===========================
+    # MENU SUPERIOR
+    # ===========================
+
+    "topmenu_links": [
+
+        {
+            "name": "Dashboard",
+            "url": "admin:index",
+        },
+
+        {
+            "model": "auth.User",
+        },
+
+        {
+            "model": "auth.Group",
+        },
+
+    ],
+
+    # ===========================
+    # MENU DO UTILIZADOR
+    # ===========================
+
+    "usermenu_links": [
+
+        {
+            "name": "Página Inicial",
+            "url": "/",
+        },
+
+        {
+            "name": "Documentação",
+            "url": "https://docs.djangoproject.com/",
+            "new_window": True,
+        },
+
+    ],
+
+    # ===========================
+    # MENU LATERAL
+    # ===========================
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "hide_apps": [
+
+    ],
+
+    "hide_models": [
+
+    ],
+
+    "order_with_respect_to": [
+
+        "auth",
+
+    ],
+
+    "custom_links": {
+
+    },
+
+    # ===========================
+    # ÍCONES
+    # ===========================
+
+    "icons": {
+
+        "auth": "fas fa-user-shield",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-users",
+
+    },
+
+    "default_icon_parents": "fas fa-folder-open",
+    "default_icon_children": "fas fa-circle",
+
+    # ===========================
+    # MODAIS
+    # ===========================
+
+    "related_modal_active": True,
+
+    # ===========================
+    # PERSONALIZAÇÃO
+    # ===========================
+
+    "custom_css": "css/admin.css",
+    "custom_js": "js/admin.js",
+
+    "use_google_fonts_cdn": True,
+
+    "show_ui_builder": False,
+
+    # ===========================
+    # FORMULÁRIOS
+    # ===========================
+
+    "changeform_format": "horizontal_tabs",
+
+    "changeform_format_overrides": {
+
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+
+    },
+
+    "language_chooser": True,
+}
+
+JAZZMIN_UI_TWEAKS = {
+
+    "navbar": "navbar-dark navbar-navy",
+
+    "no_navbar_border": True,
+
+    "navbar_fixed": True,
+
+    "layout_boxed": False,
+
+    "footer_fixed": False,
+
+    "sidebar_fixed": True,
+
+    "sidebar": "sidebar-dark-navy",
+
+    "sidebar_nav_small_text": False,
+
+    "sidebar_disable_expand": False,
+
+    "sidebar_nav_child_indent": True,
+
+    "sidebar_nav_compact_style": False,
+
+    "sidebar_nav_legacy_style": False,
+
+    "sidebar_nav_flat_style": False,
+
+    "theme": "flatly",
+
+    "dark_mode_theme": "darkly",
+
+    "button_classes": {
+
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+
+    }
+
+}
