@@ -56,8 +56,7 @@ DJANGO_APPS = [
    
     'django.contrib.sites',
     'django.contrib.humanize',
-    "cloudinary",
-    "cloudinary_storage",
+    
 ]
 
 THIRD_PARTY_APPS = [
@@ -67,7 +66,6 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'modeltranslation',
     'auditlog',
-    'storages',
     'django_celery_beat',
     'django_celery_results',
     'drf_spectacular',
@@ -84,6 +82,8 @@ LOCAL_APPS = [
     'apps.provincias',
     'apps.empresas',
     'apps.ponto_turismo',
+    "cloudinary",
+    "cloudinary_storage",
     # 'apps.empresas',
     # 'apps.eventos',
     # 'apps.roteiros',
@@ -124,9 +124,14 @@ CLOUDINARY_STORAGE = {
 }
 
 
-DEFAULT_FILE_STORAGE = (
-    "cloudinary_storage.storage.MediaCloudinaryStorage"
-)
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
