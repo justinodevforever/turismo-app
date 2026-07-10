@@ -190,10 +190,10 @@
         <span class="feature-badge">Destaque do Mês</span>
       </div>
       <div class="feature-content">
-        <div class="section-label">{{ponto_destaque.categorias.get_nome_display}}</div>
-        <p class="feature-quote">{{ponto_destaque.nome}} — {{ponto_destaque.descricao}}</p>
+        <div class="section-label">{{ponto_destaque.categorias.nome}}</div>
+        <p class="feature-quote">{{ponto_destaque.nome}} — {{ponto_destaque.geografica_limite|slice:20}}</p>
         <p class="feature-body">
-          {{ponto_destaque.historia}}
+          {{ponto_destaque.descricao}}
         </p>
         <ul class="feature-list">
           <li>{{ponto_destaque.geografica_limite}}</li>
