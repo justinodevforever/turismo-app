@@ -183,24 +183,26 @@
   <!-- ============================================================
        FEATURE — DESTAQUE EDITORIAL
   ============================================================ -->
-  <div class="feature-section">
-    <div class="feature-img">
-      <img src="{{ponto_destaque.foto_principal.url}}" alt="Quedas de Kalandula" />
-      <span class="feature-badge">Destaque do Mês</span>
+  {% if ponto_destaque %}
+    <div class="feature-section">
+      <div class="feature-img">
+        <img src="{{ponto_destaque.foto_principal.url}}" alt="Quedas de Kalandula" />
+        <span class="feature-badge">Destaque do Mês</span>
+      </div>
+      <div class="feature-content">
+        <div class="section-label">{{ponto_destaque.categorias.get_nome_display}}</div>
+        <p class="feature-quote">{{ponto_destaque.nome}} — {{ponto_destaque.descricao}}</p>
+        <p class="feature-body">
+          {{ponto_destaque.historia}}
+        </p>
+        <ul class="feature-list">
+          <li>{{ponto_destaque.geografica_limite}}</li>
+          <li>{{ponto_destaque.melhor_epoca}}</li>
+        </ul>
+        <a href="{% url 'ponto_turistico_detalhe' ponto_destaque.id %}" class="btn-primary">Descobrir Este Destino</a>
+      </div>
     </div>
-    <div class="feature-content">
-      <div class="section-label">{{ponto_destaque.categorias.get_nome_display}}</div>
-      <p class="feature-quote">{{ponto_destaque.nome}} — {{ponto_destaque.descricao}}</p>
-      <p class="feature-body">
-        {{ponto_destaque.historia}}
-      </p>
-      <ul class="feature-list">
-        <li>{{ponto_destaque.geografica_limite}}</li>
-        <li>{{ponto_destaque.melhor_epoca}}</li>
-      </ul>
-      <a href="{% url 'ponto_turistico_detalhe' ponto_destaque.id %}" class="btn-primary">Descobrir Este Destino</a>
-    </div>
-  </div>
+  {% endif %}
 
   <!-- ============================================================
        PONTOS TURÍSTICOS
