@@ -26,8 +26,6 @@
       --stamp:   'Bebas Neue', sans-serif;
     }
 
-
-  
     .active{
       color: var(--terra);
     }
@@ -42,6 +40,8 @@
       overflow-x: hidden;
     }
 
+    img { max-width: 100%; }
+
     /* ============================================================
        NAVEGAÇÃO
     ============================================================ */
@@ -55,6 +55,7 @@
       justify-content: space-between;
       transition: background 0.4s, backdrop-filter 0.4s;
       background-color: rgb(0,0,0,0.5);
+      gap: 1rem;
     }
     nav.scrolled {
       background: rgba(13,17,23,0.92);
@@ -66,6 +67,7 @@
       display: flex;
       flex-direction: column;
       line-height: 1;
+      flex-shrink: 0;
     }
     .nav-logo .marca {
       font-family: var(--stamp);
@@ -78,12 +80,15 @@
       letter-spacing: 4px;
       text-transform: uppercase;
       color: var(--ocre);
+      white-space: nowrap;
     }
 
     .nav-links {
       display: flex;
       gap: 2.5rem;
       list-style: none;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .nav-links a {
       text-decoration: none;
@@ -100,14 +105,58 @@
       color: var(--branco) !important;
       padding: 0.6rem 1.4rem;
       border-radius: 2px;
-      color: var(--branco);
       font-size: 0.75rem !important;
       letter-spacing: 2px;
       text-transform: uppercase;
       text-decoration: none;
       transition: background 0.2s;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .nav-cta:hover { background: var(--ocre) !important; color: var(--noite) !important; }
+
+    /* Botão hamburger (apenas mobile) */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 2px;
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      z-index: 210;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--branco);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Overlay + drawer mobile */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13,17,23,0.6);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 150;
+    }
+    .nav-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ============================================================
        HERO — FULLSCREEN CINEMATIC
@@ -121,8 +170,6 @@
       padding-bottom: 7vh;
       overflow: hidden;
     }
-
-    
 
     /* Linha vertical decorativa lateral */
     .hero-rail {
@@ -182,9 +229,9 @@
 
     .hero-title {
       font-family: var(--display);
-      font-size: clamp(3.2rem, 7vw, 6.5rem);
+      font-size: clamp(2.4rem, 7vw, 6.5rem);
       font-weight: 900;
-      line-height: 1.0;
+      line-height: 1.05;
       color: var(--branco);
       margin-bottom: 1.5rem;
     }
@@ -308,6 +355,7 @@
       flex: 1;
       border-right: 1px solid #eee;
       gap: 0.2rem;
+      min-width: 0;
     }
     .search-group label {
       font-size: 0.58rem;
@@ -341,11 +389,12 @@
       transition: background 0.25s;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.7rem;
       white-space: nowrap;
     }
     .search-btn:hover { background: var(--ocre); color: var(--noite); }
-    .search-btn svg { width: 18px; height: 18px; }
+    .search-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
     /* ============================================================
        STATS RÁPIDAS
@@ -363,6 +412,7 @@
       padding: 2rem;
       text-align: center;
       border-right: 1px solid rgba(255,255,255,0.06);
+      min-width: 0;
     }
     .stat-item:last-child { border-right: none; }
     .stat-number {
@@ -409,7 +459,7 @@
 
     .section-title {
       font-family: var(--display);
-      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
       font-weight: 700;
       color: var(--branco);
       line-height: 1.15;
@@ -421,6 +471,7 @@
       justify-content: space-between;
       margin-bottom: 3.5rem;
       gap: 2rem;
+      flex-wrap: wrap;
     }
 
     .section-intro {
@@ -442,9 +493,7 @@
     .prov-card {
       position:relative; border-radius:3px; overflow:hidden; cursor:pointer;
       display:block; text-decoration:none;
-      
     }
-
 
     .prov-img {
       width:100%; object-fit:cover; display:block;
@@ -518,6 +567,7 @@
     .feature-img {
       position: relative;
       overflow: hidden;
+      min-height: 320px;
     }
     .feature-img img {
       width: 100%;
@@ -550,7 +600,7 @@
 
     .feature-quote {
       font-family: var(--display);
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-size: clamp(1.5rem, 3vw, 2.6rem);
       font-weight: 700;
       font-style: italic;
       color: var(--branco);
@@ -661,6 +711,8 @@
       justify-content: space-between;
       border-top: 1px solid rgba(255,255,255,0.06);
       padding-top: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     .ponto-loc {
@@ -959,6 +1011,7 @@
       font-family: var(--corpo);
       font-size: 0.9rem;
       outline: none;
+      min-width: 0;
     }
     .newsletter-form input::placeholder { color: var(--cinza); }
     .newsletter-form button {
@@ -1054,6 +1107,9 @@
       justify-content: space-between;
       font-size: 0.72rem;
       color: rgba(140,155,176,0.5);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      text-align: center;
     }
 
     /* ============================================================
@@ -1072,6 +1128,14 @@
     /* ============================================================
        RESPONSIVO
     ============================================================ */
+
+    /* Tablets grandes / laptops pequenos */
+    @media (max-width: 1200px) {
+      .nav-links { gap: 1.5rem; }
+      .feature-content { padding: 4rem 3rem; }
+    }
+
+    /* Tablets */
     @media (max-width: 1024px) {
       .provincias-grid { grid-template-columns: 1fr 1fr; }
       .prov-card:first-child { grid-column: 1 / 3; }
@@ -1079,27 +1143,94 @@
       .pontos-grid { grid-template-columns: 1fr 1fr; }
       .hoteis-scroll { grid-template-columns: 1fr 1fr; }
       .guias-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
       .stats-strip { grid-template-columns: 1fr 1fr; }
+      .gastro-inner { gap: 3rem; }
     }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero-content { padding: 0 5%; }
-      .hero-rail { display: none; }
-      .search-bar { flex-direction: column; transform: none; margin: -1rem 5% 2rem; border-radius: 4px; }
-      .search-group { border-right: none; border-bottom: 1px solid #eee; }
+    /* Mobile grande / tablets pequenos: menu hamburger entra em cena */
+    @media (max-width: 860px) {
+      .nav-links {
+        position: fixed;
+        top: 0; right: -100%;
+        width: min(320px, 80vw);
+        height: 100vh;
+        background: rgba(13,17,23,0.98);
+        backdrop-filter: blur(14px);
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2rem;
+        padding: 2rem 2.5rem;
+        transition: right 0.35s ease;
+        z-index: 200;
+        border-left: 1px solid rgba(255,255,255,0.06);
+      }
+      .nav-links.open { right: 0; }
+      .nav-links a { font-size: 0.95rem; }
+
+      .nav-toggle { display: flex; }
+
+      .nav-cta { display: none; }
+      .nav-links li:last-child {
+        margin-top: 1rem;
+      }
+      .nav-links li:last-child a {
+        background: var(--terra);
+        color: var(--branco);
+        padding: 0.7rem 1.4rem;
+        border-radius: 2px;
+        display: inline-block;
+      }
+
+      .hero-title { font-size: clamp(2.2rem, 9vw, 4rem); }
       .feature-section { grid-template-columns: 1fr; }
+      .feature-img { min-height: 260px; }
       .feature-content { padding: 3rem 2rem; }
       .gastro-inner { grid-template-columns: 1fr; gap: 3rem; }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      section { padding: 4.5rem 6%; }
+      .hero-content { padding: 0 6%; }
+      .hero-rail { display: none; }
+      .hero-dots { display: none; }
+      .search-bar { flex-direction: column; transform: none; margin: -1rem 6% 2rem; border-radius: 4px; }
+      .search-group { border-right: none; border-bottom: 1px solid #eee; }
+      .search-btn { padding: 1.2rem; }
       .provincias-grid { grid-template-columns: 1fr; }
       .prov-card:first-child, .prov-card:nth-child(5) { grid-column: auto; }
+      .prov-card .prov-img, .prov-card.featured .prov-img, .prov-card.wide .prov-img { height: 240px; }
       .pontos-grid { grid-template-columns: 1fr; }
       .hoteis-scroll { grid-template-columns: 1fr; }
       .guias-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid { grid-template-columns: 1fr; }
-      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .stats-strip { grid-template-columns: 1fr 1fr; padding: 2.5rem 6% 3rem; }
+      .stat-item { padding: 1rem; }
+      .stat-number { font-size: 2.6rem; }
       .newsletter-form { flex-direction: column; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Telemóveis pequenos */
+    @media (max-width: 480px) {
+      .nav-logo .marca { font-size: 1.3rem; }
+      .nav-logo .sub { font-size: 0.52rem; letter-spacing: 2px; }
+      .nav-toggle { width: 38px; height: 38px; }
+      .hero-eyebrow { font-size: 0.58rem; }
+      .hero-desc { font-size: 0.95rem; }
+      .hero-actions { flex-direction: column; width: 100%; }
+      .hero-actions .btn-primary, .hero-actions .btn-ghost { text-align: center; width: 100%; }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .stat-number { font-size: 2.1rem; }
+      .guias-grid { grid-template-columns: 1fr; }
+      .gastro-mosaic { grid-template-columns: 1fr; }
+      .gastro-img:first-child { grid-column: auto; }
+      .feature-content { padding: 2.5rem 1.5rem; }
+      .feature-quote { font-size: 1.4rem; }
+      .feature-quote::before { font-size: 5rem; top: -1.8rem; left: -0.8rem; }
     }
   </style>
 </head>
@@ -1113,7 +1244,8 @@
       <span class="marca">EXPLORA</span>
       <span class="sub">Angola · Turismo Regional</span>
     </div>
-    <ul class="nav-links">
+
+    <ul class="nav-links" id="navLinks">
       <li><a href="/" class="{% if secao == 'home' %}active{% endif %}">Página Inicial</a></li>
       <li><a href="{% url 'provincias' %}" class="{% if secao == 'provincia' %}active{% endif %}">Províncias</a></li>
       <li><a href="{% url 'ponto_turistico' %}" class="{% if secao == 'ponto_turistico' %}active{% endif %}">Destinos</a></li>
@@ -1122,10 +1254,17 @@
       <li><a href="{% url 'guia_turistico' %}" class="{% if secao == 'guia' %}active{% endif %}">Guias</a></li>
     </ul>
 
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
 
+  <div class="nav-overlay" id="navOverlay"></div>
+
   {% block content %}{% endblock content %}
-  
+
   <footer>
     <div class="footer-grid">
       <div class="footer-brand">
@@ -1186,6 +1325,33 @@
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Menu mobile (hamburger)
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function toggleMenu(forceClose) {
+      const shouldOpen = forceClose === true ? false : !navLinks.classList.contains('open');
+      navLinks.classList.toggle('open', shouldOpen);
+      navOverlay.classList.toggle('open', shouldOpen);
+      navToggle.classList.toggle('open', shouldOpen);
+      navToggle.setAttribute('aria-expanded', shouldOpen);
+      document.body.style.overflow = shouldOpen ? 'hidden' : '';
+    }
+
+    navToggle.addEventListener('click', () => toggleMenu());
+    navOverlay.addEventListener('click', () => toggleMenu(true));
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(true));
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') toggleMenu(true);
+    });
+    // Fecha o menu automaticamente se a janela voltar a tamanho desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 860) toggleMenu(true);
     });
 
     // Fade-up on scroll (mantém o código existente)
