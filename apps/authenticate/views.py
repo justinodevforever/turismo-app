@@ -11,6 +11,7 @@ def index(request):
     hoteis            = Hotel.objects.all()
     guias             = GuiaTuristico.objects.all()
     prato_destaque    = PratoTipico.objects.filter(destaque=True).first()
+    ponto_destaque    = PontoTuristico.objects.filter(destaque=True).first()
     
     #ponto_toristico_destaque = PontoTuristico.objects.filter(total_visualizacoes=)
     
@@ -22,6 +23,7 @@ def index(request):
         'guias':             guias,
         'secao':             'home',
         'prato_destaque':    prato_destaque,
+        'ponto_destaque':    ponto_destaque,
     }
     
     return render(request, "pagebase/index.html", context)

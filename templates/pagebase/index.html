@@ -185,24 +185,20 @@
   ============================================================ -->
   <div class="feature-section">
     <div class="feature-img">
-      <img src="https://images.unsplash.com/photo-1569163139394-de4e5f43e5ca?w=900&auto=format&fit=crop" alt="Quedas de Kalandula" />
+      <img src="{{ponto_destaque.foto_principal.url}}" alt="Quedas de Kalandula" />
       <span class="feature-badge">Destaque do Mês</span>
     </div>
     <div class="feature-content">
-      <div class="section-label">Maravilha Natural</div>
-      <p class="feature-quote">As Quedas de Kalandula — onde a água abraça a eternidade</p>
+      <div class="section-label">{{ponto_destaque.categorias.get_nome_display}}</div>
+      <p class="feature-quote">{{ponto_destaque.nome}} — {{ponto_destaque.descricao}}</p>
       <p class="feature-body">
-        Com mais de 105 metros de altura e 400 metros de largura, as Quedas de Kalandula
-        no rio Lucala são umas das maiores cataratas de África. Uma experiência que transforma
-        quem a presencia.
+        {{ponto_destaque.historia}}
       </p>
       <ul class="feature-list">
-        <li>Localizada na Província de Malanje</li>
-        <li>Acesso por estrada alcatroada</li>
-        <li>Parque Nacional circundante</li>
-        <li>Melhor época: Março a Maio</li>
+        <li>{{ponto_destaque.geografica_limite}}</li>
+        <li>{{ponto_destaque.melhor_epoca}}</li>
       </ul>
-      <a href="#" class="btn-primary">Descobrir Este Destino</a>
+      <a href="{% url 'ponto_turistico_detalhe' ponto_destaque.id %}" class="btn-primary">Descobrir Este Destino</a>
     </div>
   </div>
 
@@ -222,7 +218,7 @@
 
       {% for p in pontos_toristicos %}
 
-        <div class="ponto-card fade-up">
+        <a href="{% url 'ponto_turistico_detalhe' p.id %}" class="ponto-card fade-up">
           <img class="ponto-img" src="{{p.foto_principal.url}}" alt="{{p.nome}}" />
           <div class="ponto-body">
             <div class="ponto-cat">
@@ -238,7 +234,7 @@
               <div class="ponto-rating">⭐ {{p.total_avaliacoes}}</div>
             </div>
           </div>
-        </div>
+        </a>
 
       {% endfor %}
       

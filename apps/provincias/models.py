@@ -263,7 +263,6 @@ class PontoTuristico(ModeloPublicavel):
     nome        = models.CharField(max_length=200, verbose_name=_('Nome'))
     slug        = models.SlugField(max_length=220, unique=True)
     descricao   = models.TextField(verbose_name=_('Descrição'))
-    historia    = models.TextField(blank=True, verbose_name=_('História / Contexto'))
     caracteristicas    = models.TextField(blank=True, verbose_name=_('Caract. Demográfica, Física-Económico e Geografica'))
     geografica_limite    = models.TextField(blank=True, verbose_name=_('Situação Geográfica'))
     Relevo    = models.TextField(blank=True, verbose_name=_('Relevo e Geomorfologia'))
