@@ -310,7 +310,7 @@
       
     </div>
     <div style="text-align:center;margin-top:3rem;">
-      <a href="pontos-turisticos.html?provincia=malanje" class="btn-ghost">Ver Todos os Pontos Turísticos de {{provincia.nome}}</a>
+      <a href="/turismo/ponto-turistico/?provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Pontos Turísticos de {{provincia.nome}}</a>
     </div>
   </div>
 
@@ -340,7 +340,7 @@
     </div>
 
     <div style="text-align:center;margin-top:3rem;">
-      <a href="gastronomia.html?provincia=malanje" class="btn-ghost">Ver Todos os Pratos de {{provincia.nome}}</a>
+      <a href="/gastronomias?provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Pratos de {{provincia.nome}}</a>
     </div>
   </div>
 
@@ -430,7 +430,7 @@
         {% endfor %}
 
         <div style="margin-top:1.5rem;">
-          <a href="/alojamentos/?nome_provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Alojamentos</a>
+          <a href="/alojamentos/?nome_provincia={{provincia.nome}}" class="btn-ghost">Ver Todos os Alojamentos {{provincia.nome}}</a>
         </div>
 
       </div>

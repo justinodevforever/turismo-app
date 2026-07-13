@@ -1,22 +1,7 @@
 {% extends "pagebase/base.html" %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ponto_turistico.nome}}— Explora Angola</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
   <style>
   
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -177,8 +162,7 @@
       .proximos-grid { grid-template-columns: 1fr; }
     }
   </style>
-</head>
-<body>
+
 
 
   <!-- HERO -->
@@ -248,6 +232,60 @@
 
       <div class="divider"></div>
 
+      <div class="section-label">Aspectos Climáticos e Hidrogrśficas da localidade</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.clima_hidrografica|default:"Sem informações"}}</p>
+      </div>
+      
+      <div class="divider"></div>
+
+      <div class="section-label">caracteristicas Demográfica, Física-Económico e Geografica</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.caracteristicas|default:"Sem informações"}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label">Situação Geografica e Limites Territorial da localidade</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.geografica_limite|default:"Sem informações"}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label">Relevo e Geomorfologia</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.Relevo|default:"Sem informações"}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label">Aspectos Sócio Demográfico e Económico</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.economia|default:"Sem informações"}}</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-label">Agricultura, Indústria e Pesca da Localidade</div>
+
+      <div class="content-body">
+        
+        <p>{{ponto_turistico.agricultura|default:"Sem informações"}}</p>
+      </div>
+
+      <div class="divider"></div>
+
       <!-- DADOS PRÁTICOS -->
       <div class="section-label">Dados Práticos</div>
       <div class="infos-grid">
@@ -306,11 +344,6 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sidebar-card">
-        <div class="sidebar-title">Planear Visita</div>
-        <a href="guias.html" class="btn-primary">Contratar Guia Local</a>
-        <a href="#" class="btn-ghost">Guardar nos Favoritos ♡</a>
-      </div>
 
       <div class="sidebar-card">
         <div class="sidebar-title">Como Chegar</div>
@@ -473,6 +506,5 @@
 
     
 </script>
-</body>
-</html>
+
 {% endblock  %}

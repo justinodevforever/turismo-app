@@ -6,9 +6,13 @@ from django.core.paginator import Paginator
 # Create your views here.
 def gastronomia_lista(request):
     
+    provincia = request.GET.get('provincia')
     gastronomias    = PratoTipico.objects.all()
     prato_destaque  = PratoTipico.objects.filter(destaque=True).first()
     provincias      = Provincia.objects.all()
+    
+    if provincia:
+        gastronomias = gastronomias.filter(provincia__nome=provincia)
     
     context = {
         'gastronomias': gastronomias,

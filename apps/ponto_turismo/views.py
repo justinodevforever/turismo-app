@@ -19,7 +19,7 @@ def ponto_turistico(request):
     
     if provincia:
         
-        pontos_turisticos = pontos_turisticos.filter(provincia_id=provincia)
+        pontos_turisticos = pontos_turisticos.filter(provincia__nome=provincia)
         
     if search:
         
@@ -37,7 +37,7 @@ def ponto_turistico(request):
         'per_page': per_page,
         'provincas': provincas,
         'page': page,
-        'provincia': int(provincia) if provincia else "",
+        'provincia': provincia,
         'entrada': entrada,
         'pontos_turisticos': pontos_turisticos,
         'secao': 'ponto_turistico'
