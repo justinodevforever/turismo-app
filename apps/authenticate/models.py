@@ -21,7 +21,7 @@ class ModeloBase(models.Model):
     Classe base para todos os modelos do sistema.
     Fornece campos de auditoria e UUID como identificador público.
     """
-    uuid          = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+    id            = models.UUIDField(default=uuid.uuid4, editable=False, unique=True,primary_key=True, db_index=True)
     criado_em     = models.DateTimeField(auto_now_add=True, verbose_name=_('Criado em'))
     atualizado_em = models.DateTimeField(auto_now=True,     verbose_name=_('Atualizado em'))
     ativo         = models.BooleanField(default=True,       verbose_name=_('Ativo'))

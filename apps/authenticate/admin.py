@@ -39,7 +39,7 @@ from .models import (
 class ModeloBaseAdminMixin(admin.ModelAdmin):
     """Mixin para qualquer ModelAdmin de um modelo que herda ModeloBase."""
 
-    readonly_fields = ('uuid', 'criado_em', 'atualizado_em')
+    readonly_fields = ('id', 'criado_em', 'atualizado_em')
     list_filter = ('ativo',)
     actions = ['acao_ativar', 'acao_inativar']
 
@@ -95,7 +95,7 @@ class UsuarioAdmin(UserAdmin):
     list_display_links = ('email', 'nome')
     list_filter = ('tipo_usuario', 'is_active', 'is_staff', 'idioma_preferido', 'criado_em')
     search_fields = ('email', 'nome', 'apelido', 'telefone')
-    readonly_fields = ('uuid', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso', 'foto_preview_grande')
+    readonly_fields = ('id', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso', 'foto_preview_grande')
     date_hierarchy = 'criado_em'
     list_per_page = 30
 
@@ -112,7 +112,7 @@ class UsuarioAdmin(UserAdmin):
             'fields': ('idioma_preferido', 'notificacoes_email', 'modo_escuro')
         }),
         (_('Auditoria'), {
-            'fields': ('uuid', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso'),
+            'fields': ('id', 'criado_em', 'atualizado_em', 'ultimo_acesso_em', 'ip_ultimo_acesso'),
             'classes': ('collapse',),
         }),
     )
@@ -294,7 +294,7 @@ class MidiaAdmin(ModeloBaseAdminMixin):
         (None, {'fields': ('tipo', 'titulo', 'descricao')}),
         (_('Ficheiro'), {'fields': ('ficheiro', 'preview_grande', 'url_externa')}),
         (_('Metadados'), {'fields': ('tamanho_kb', 'largura_px', 'altura_px', 'criado_por')}),
-        (_('Auditoria'), {'fields': ('uuid', 'criado_em', 'atualizado_em', 'ativo'), 'classes': ('collapse',)}),
+        (_('Auditoria'), {'fields': ('id', 'criado_em', 'atualizado_em', 'ativo'), 'classes': ('collapse',)}),
     )
 
     @admin.display(description=_('Preview'))
