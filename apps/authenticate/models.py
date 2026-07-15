@@ -112,6 +112,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         ES = 'es', _('Español')
 
     # Identificação
+    id        = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, unique=True)
     email       = models.EmailField(unique=True, verbose_name=_('E-mail'))
     nome        = models.CharField(max_length=100, verbose_name=_('Nome'))
     apelido     = models.CharField(max_length=100, blank=True, verbose_name=_('Apelido'))
