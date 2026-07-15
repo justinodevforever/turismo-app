@@ -117,21 +117,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ============================================================
 # BANCO DE DADOS — PostgreSQL + PostGIS
 # ============================================================
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('NAME_DB'),
-#         'USER': config('USER_DB'),
-#         'PASSWORD': config('PASSWORD_DB'),
-#         'HOST': config('HOST_DB'),
-#         'PORT': config('PORT_DB'),
-#     }
+#     "default": dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL")
+#     )
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('NAME_DB'),
+        'USER': config('USER_DB'),
+        'PASSWORD': config('PASSWORD_DB'),
+        'HOST': config('HOST_DB'),
+        'PORT': config('PORT_DB'),
+    }
+}
 
 TEMPLATES = [
     {
