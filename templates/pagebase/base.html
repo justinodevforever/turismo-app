@@ -31,8 +31,11 @@
       --corpo:   'Inter', sans-serif;
       --stamp:   'Bebas Neue', sans-serif;
     }
+    a{
+      text-decoration: none;
+    }
 
-    .active{
+    .nav-links .active{
       color: var(--terra);
     }
 
@@ -573,7 +576,7 @@
     .feature-img {
       position: relative;
       overflow: hidden;
-      min-height: 320px;
+      min-height: 220px;
     }
     .feature-img img {
       width: 100%;
@@ -1246,13 +1249,13 @@
        NAVEGAÇÃO
   ============================================================ -->
   <nav id="nav">
-    <div class="nav-logo">
+    <a href="/" class="nav-logo">
       <span class="marca">EXPLORA</span>
       <span class="sub">Angola · Turismo Regional</span>
-    </div>
+    </a>
 
     <ul class="nav-links" id="navLinks">
-      <li><a href="/" class="{% if secao == 'home' %}active{% endif %}">Página Inicial</a></li>
+      <li><a href="/" class="{% if secao == 'home' %}active{% endif %}">Página Inicial </a></li>
       <li><a href="{% url 'provincias' %}" class="{% if secao == 'provincia' %}active{% endif %}">Províncias</a></li>
       <li><a href="{% url 'ponto_turistico' %}" class="{% if secao == 'ponto_turistico' %}active{% endif %}">Destinos</a></li>
       <li><a href="{% url 'gastronomia_lista' %}" class="{% if secao == 'gastronomia' %}active{% endif %}">Gastronomia</a></li>
@@ -1352,7 +1355,7 @@
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => toggleMenu(true));
     });
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydhomeown', (e) => {
       if (e.key === 'Escape') toggleMenu(true);
     });
     // Fecha o menu automaticamente se a janela voltar a tamanho desktop

@@ -7,9 +7,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gastronomia Típica — Explora Angola</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
     :root {
       --terra:   #C25B2A;
@@ -20,28 +17,7 @@
       --cinza:   #8C9BB0;
       --verde:   #2D6A4F;
     }
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--noite); color: var(--branco); overflow-x: hidden; }
-
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1.25rem 5%; display: flex; align-items: center; justify-content: space-between;
-      background: rgba(13,17,23,0.95); backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    a{
-      text-decoration: none;
-    }
-    .nav-logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
-    .nav-logo .marca { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; color: var(--branco); }
-    .nav-logo .sub { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; color: var(--ocre); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { text-decoration: none; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(247,243,238,0.75); transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--ocre); }
-    .nav-cta { background: var(--terra); color: var(--branco); padding: 0.6rem 1.4rem; border-radius: 2px; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; }
-    .nav-cta:hover { background: var(--ocre); color: var(--noite); }
-
+    
     /* HERO */
     .page-hero {
       position: relative; padding: 14rem 5% 6rem; overflow: hidden;
@@ -72,6 +48,8 @@
     h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; color: var(--branco); line-height: 1.05; margin-bottom: 1.5rem; }
     h1 em { font-style: italic; color: rgba(255,255,255,0.7); }
     .hero-desc { font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.75); max-width: 540px; }
+
+    .search-select { background:var(--escuro); border:1px solid rgba(255,255,255,0.1); color:var(--branco); padding:0.45rem 0.8rem; border-radius:2px; font-size:0.75rem; font-family:'Inter',sans-serif; outline:none; }
 
     /* FILTROS */
     .filtros-bar {
@@ -170,7 +148,9 @@
 </head>
 <body>
 
-  <!-- HERO -->
+  <!-- HERO --> <div class="filtros-search">
+        <input type="text" placeholder="🔍  Pesquisar prato..." />
+      </div>
   <div class="page-hero">
     <div class="prov-hero-bg"></div>
     <div class="prov-hero-overlay"></div>
@@ -185,18 +165,14 @@
   <div class="filtros-bar">
     <div class="filtros-inner">
       <span class="filtro-label">Filtrar por:</span>
-      <div class="filtros-chips">
-        <span class="chip active" onclick="filtrar(this,'todos')">Todos</span>
-        <span class="chip" onclick="filtrar(this,'luanda')">Luanda</span>
-        <span class="chip" onclick="filtrar(this,'benguela')">Benguela</span>
-        <span class="chip" onclick="filtrar(this,'huambo')">Huambo</span>
-        <span class="chip" onclick="filtrar(this,'namibe')">Namibe</span>
-        <span class="chip" onclick="filtrar(this,'cabinda')">Cabinda</span>
-        <span class="chip badge-veg" style="border-color:rgba(45,106,79,0.4);color:#5cb88a;" onclick="filtrar(this,'vegetariano')">🌿 Vegetariano</span>
-      </div>
-      <div class="filtros-search">
-        <input type="text" placeholder="🔍  Pesquisar prato..." />
-      </div>
+      <form method="get" class="filtros-chips">
+        <Select class="search-select" name="provincia" onchange="this.form.submit()">
+          {% for p in  provincias %}
+            <option value="{{p.nome}}"> {{p.nome}} </option>
+          {% endfor %}
+        </Select>
+      </form>
+     
     </div>
   </div>
 

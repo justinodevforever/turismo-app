@@ -74,17 +74,15 @@ def alojamento_lista(request):
 def restaurante_lista(request):
     
     restaurantes    = Restaurante.objects.all()
+    total_restaurate = restaurantes.count()
     menus           = ItemMenu.objects.all()
     total_provincia = Provincia.objects.count()
-    
-    print(restaurantes)
     
     page        = request.GET.get('page', 1)
     per_page    = request.GET.get('per_page', 20) 
     tipo_cozinha   = request.GET.get('tipo_cozinha')
     search    = request.GET.get('search')
     order_by   = request.GET.get('order_by')
-    print(order_by)
     
     if tipo_cozinha:
         
@@ -101,6 +99,7 @@ def restaurante_lista(request):
         'restaurantes': restaurantes,
         'menus': menus,
         'total_provincia': total_provincia,
+        'total_restaurate': total_restaurate,
         'per_page': per_page,
         'page': page,
         'order_by': order_by,

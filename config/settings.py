@@ -119,7 +119,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ============================================================
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
+        default=config("DATABASE_URL")
     )
 }
 # DATABASES = {
@@ -179,10 +179,10 @@ USE_L10N = True
 USE_TZ   = True
 
 LANGUAGES = [
+    # ('en', 'English'),
+    # ('fr', 'Français'),
+    # ('es', 'Español'),
     ('pt', 'Português'),
-    ('en', 'English'),
-    ('fr', 'Français'),
-    ('es', 'Español'),
 ]
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
@@ -274,7 +274,7 @@ if not DEBUG:
 JAZZMIN_SETTINGS = {
     "site_title": "Sistema Académico",
     "site_header": "Painel Administrativo",
-    "site_brand": "SIGA",
+    "site_brand": "TurSpace",
 
     "search_model": [
         "authenticate.usuario",

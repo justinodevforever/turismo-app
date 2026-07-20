@@ -7,22 +7,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pontos Turísticos — Explora Angola</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
-    body{font-family:var(--corpo);background:var(--noite);color:var(--branco);overflow-x:hidden;}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(13,17,23,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.05);}
-    .nav-logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
-    .nav-logo .marca{font-family:var(--stamp);font-size:1.6rem;letter-spacing:3px;color:var(--branco);}
-    .nav-logo .sub{font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--ocre);}
-    .nav-links{display:flex;gap:2.5rem;list-style:none;}
-    .nav-links a{text-decoration:none;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(247,243,238,0.75);transition:color 0.2s;}
-    .nav-links a:hover,.nav-links a.active{color:var(--ocre);}
-    .nav-cta{background:var(--terra);color:var(--branco)!important;padding:0.6rem 1.4rem;border-radius:2px;font-size:0.75rem!important;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background 0.2s;}
-    .nav-cta:hover{background:var(--ocre)!important;color:var(--noite)!important;}
-
+    
     /* HERO */
     .page-hero{padding:10rem 5% 5rem;background:var(--escuro);position:relative;overflow:hidden;}
     .page-hero::before{content:'DESTINOS';position:absolute;font-family:var(--stamp);font-size:20vw;color:rgba(255,255,255,0.02);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
@@ -139,7 +125,7 @@
   <div class="page-hero">
     <div class="page-hero-inner">
       <div>
-        <div class="breadcrumb"><a href="index.html">Início</a><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg><span>Destinos</span></div>
+        <div class="breadcrumb"><a href="/">Início</a><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg><span>Destinos</span></div>
         <div class="page-eyebrow">Angola</div>
         <h1 class="page-title"> {{pontos_turisticos|length}} Destinos<br/><em>Imperdíveis</em></h1>
         <p class="page-desc">Das praias atlânticas às cataratas do interior, das chanas do leste, das florestas equatoriais aos desertos ancestrais — descobre os destinos mais extraordinários de Angola.</p>
@@ -180,7 +166,7 @@
 
       {% for p in pontos_turisticos %}
       
-        <a href="{% url 'ponto_turistico_detalhe' p.id %}" class="ponto-card featured fade-up" data-cat="natureza" data-prov="Malanje">
+        <a href="{% url 'ponto_turistico_detalhe' p.id %}" class="ponto-card featured fade-up" data-cat="natureza" data-prov="{{p.provincia.nome}}">
           <div class="ponto-img-wrap">
             <img class="ponto-img" src="{{p.foto_principal.url}}" alt="{{p.nome}}" />
             {% if p.destaque %}
@@ -189,7 +175,7 @@
             <button class="ponto-fav" style="color: #fff;" onclick="event.preventDefault()">♡</button>
           </div>
           <div class="ponto-body">
-            <div class="ponto-cat-row"><div class="ponto-cat">💧 {{p.nome|slice:20}}{% if p.nome|length > 20 %}...{% endif %}</div><div class="ponto-rating">⭐ {{p.total_avaliacoes}} · 2.3K</div></div>
+            <div class="ponto-cat-row"><div class="ponto-cat">💧 {{p.nome|slice:20}}{% if p.nome|length > 20 %}...{% endif %}</div><div class="ponto-rating">⭐ {{p.total_avaliacoes}} · {{p.total_visualizacoes}} <span style="color: gray;">👁</span> </div></div>
             <div class="ponto-nome">{{p.nome}}</div>
             <p class="ponto-desc">{{p.descricao|slice:70}}{% if p.descricao|length > 70 %}...{% endif %}</p>
             <div class="ponto-meta"><div class="ponto-loc"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -226,9 +212,7 @@
 
 
   <script>
-    const fadeEls = document.querySelectorAll('.fade-up');
-    const obs = new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');obs.unobserve(el.target);}});},{threshold:0.08});
-    fadeEls.forEach(el=>obs.observe(el));
+    
 
     function filterCat(btn, cat){
       document.querySelectorAll('.cat-pill').forEach(b=>b.classList.remove('active'));

@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     
     path('provincias/', provincias, name='provincias'),
-    path('provincias/<int:provincia_id>/detalhe', provincia_detalhe, name='provincia_detalhe'),
+    path('provincias/<uuid:provincia_id>/detalhe', provincia_detalhe, name='provincia_detalhe'),
 
     # Página do Assistente IA
     path(

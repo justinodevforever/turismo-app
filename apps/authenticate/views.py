@@ -6,10 +6,10 @@ from apps.provincias.models import *
 def index(request):
     
     provincias        = Provincia.objects.all().order_by('ordem')
-    pontos_toristicos = PontoTuristico.objects.all()
-    gastronomias      = PratoTipico.objects.all()
-    hoteis            = Hotel.objects.all()
-    guias             = GuiaTuristico.objects.all()
+    pontos_toristicos = PontoTuristico.objects.all()[:10]
+    gastronomias      = PratoTipico.objects.all()[:10]
+    hoteis            = Hotel.objects.all()[:10]
+    guias             = GuiaTuristico.objects.all()[:10]
     prato_destaque    = PratoTipico.objects.filter(destaque=True).first()
     ponto_destaque    = PontoTuristico.objects.filter(destaque=True).first()
     

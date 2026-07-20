@@ -154,6 +154,13 @@ class Municipio(ModeloPublicavel):
     descricao   = models.TextField(blank=True)
     diagnostico    = models.TextField(blank=True, verbose_name=_('Diagnóstico do Setor'))
     estrategia    = models.TextField(blank=True, verbose_name=_('Estrategia para potenciar o turismo'))
+    caracteristicas    = models.TextField(blank=True, verbose_name=_('Caract. Demográfica, Física-Económico e Geografica'))
+    geografica_limite    = models.TextField(blank=True, verbose_name=_('Situação Geográfica'))
+    Relevo    = models.TextField(blank=True, verbose_name=_('Relevo e Geomorfologia'))
+    clima_hidrografica    = models.TextField(blank=True, verbose_name=_('Clima e Hidrografia'))
+    economia    = models.TextField(blank=True, verbose_name=_('Sócio Demográfico e Económico'))
+    agricultura    = models.TextField(blank=True, verbose_name=_('Agricultura, indústria e pesca'))
+    historia    = models.TextField(blank=True, verbose_name=_('História / Contexto'))
     
     foto_capa   = models.ImageField(upload_to='municipios/capas/%Y/', null=True, blank=True)
     latitude = models.DecimalField(
@@ -263,13 +270,14 @@ class PontoTuristico(ModeloPublicavel):
     nome        = models.CharField(max_length=200, verbose_name=_('Nome'))
     slug        = models.SlugField(max_length=220, unique=True)
     descricao   = models.TextField(verbose_name=_('Descrição'))
-    caracteristicas    = models.TextField(blank=True, verbose_name=_('Caract. Demográfica, Física-Económico e Geografica'))
-    geografica_limite    = models.TextField(blank=True, verbose_name=_('Situação Geográfica'))
-    Relevo    = models.TextField(blank=True, verbose_name=_('Relevo e Geomorfologia'))
-    clima_hidrografica    = models.TextField(blank=True, verbose_name=_('Clima e Hidrografia'))
-    economia    = models.TextField(blank=True, verbose_name=_('Sócio Demográfico e Económico'))
-    agricultura    = models.TextField(blank=True, verbose_name=_('Agricultura, indústria e pesca'))
+    
     historia    = models.TextField(blank=True, verbose_name=_('História / Contexto'))
+    proposta    = models.TextField(blank=True, verbose_name=_('Proposta de intervenção'))
+    localizacao = models.TextField(blank=True, verbose_name=_('Localização'))
+    outros_aspectos = models.TextField(blank=True, verbose_name=_('Outros Aspectos'))
+    infrastrutura = models.TextField(blank=True, verbose_name=_('Infra-Estruturas'))
+    via_acesso = models.TextField(blank=True, verbose_name=_('Via de Acesso'))
+    especie_animal = models.TextField(blank=True, help_text='Só para Parques', verbose_name=_('Espécie Animal'))
 
     # Localização
     latitude = models.DecimalField(

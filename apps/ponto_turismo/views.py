@@ -48,6 +48,10 @@ def ponto_turistico(request):
 def ponto_turistico_detalhe(request, id):
     
     ponto_turistico = PontoTuristico.objects.get(id=id)
+    
+    ponto_turistico.total_visualizacoes = ponto_turistico.total_visualizacoes + 1
+    
+    ponto_turistico.save()
 
     
     context = {

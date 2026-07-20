@@ -35,13 +35,7 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(13,17,23,0.15) 0%,
-        rgba(13,17,23,0.0)  30%,
-        rgba(13,17,23,0.55) 65%,
-        rgba(13,17,23,0.95) 100%
-      );
+      background: rgb(0,0,0,0.6);
     }
 </style>
   
@@ -73,7 +67,7 @@
       <p class="hero-desc">
         {{provincias|length}} províncias, cada uma com a sua alma. Da Welwitschia Mirabilis as Quedas de 
         Chiume,
-        descobre o Litoral, Sul, Centro e Leste Angola de dentro para fora.
+        descobre o Litoral, Sul, Centro e Leste de Angola, dentro e fora.
       </p>
       <div class="hero-actions">
         <a href="#provincias" class="btn-primary">Explorar Províncias</a>
@@ -126,7 +120,7 @@
         <div class="stat-label">Províncias</div>
       </div>
       <div class="stat-item fade-up">
-        <div class="stat-number"> {{gastronomias|length}} <span class="stat-unit">+</span></div>
+        <div class="stat-number"> {{pontos_toristicos|length}} <span class="stat-unit">+</span></div>
         <div class="stat-label">Pontos Turísticos</div>
       </div>
       <div class="stat-item fade-up">
